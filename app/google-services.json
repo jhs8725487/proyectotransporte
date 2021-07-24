@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "100693938563",
+    "project_id": "gestiontransporte-d34a3",
+    "storage_bucket": "gestiontransporte-d34a3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:100693938563:android:8cccaa38ab0566027426b6",
+        "android_client_info": {
+          "package_name": "com.joel.proyectogrado"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "100693938563-c9kgnthl0i2ifkemvq2l6qerudkpqpif.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.joel.proyectogrado",
+            "certificate_hash": "4e52bbd6edc1efbe0eecdf5574b9a7862cf070f3"
+          }
+        },
+        {
+          "client_id": "100693938563-50rfgscu8rn5scknunb05cfj47pv1p31.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlsYVVPsN2DC4LD8rLSOA-VferyDSETTI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "100693938563-50rfgscu8rn5scknunb05cfj47pv1p31.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
