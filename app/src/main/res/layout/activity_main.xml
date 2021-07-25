@@ -36,6 +36,7 @@
            android:orientation="horizontal">
 
            <Button
+               android:id="@+id/btnIAmDriver"
                android:layout_width="0dp"
                android:layout_weight="1"
                android:layout_height="wrap_content"
@@ -46,6 +47,7 @@
                android:text="SOY CONDUCTOR"/>
 
            <Button
+               android:id="@+id/btnIAmClient"
                android:layout_width="0dp"
                android:layout_weight="1"
                android:background="@drawable/rounded_button"
