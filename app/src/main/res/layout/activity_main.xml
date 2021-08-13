@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:background="@color/ColorPrimary"
-    tools:context=".MainActivity">
+    tools:context="Activity.MainActivity">
 
    <LinearLayout
        android:layout_width="match_parent"
@@ -22,7 +22,7 @@
        <TextView
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           android:text="Appmovil es un aplicativo similar a ubber"
+           android:text="Servicio de transporte de la linea 111"
            android:textAlignment="center"
            android:textColor="@color/ColorWhite"
            android:layout_margin="40dp"
