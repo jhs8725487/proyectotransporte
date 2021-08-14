@@ -1,5 +1,6 @@
-package Activity;
+package com.joel.proyectogrado;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
@@ -16,13 +17,18 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
-import com.joel.proyectogrado.R;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import Activity.client.MapClientActivity;
+import com.joel.proyectogrado.client.MapClientActivity;
 import dmax.dialog.SpotsDialog;
 import include.MyToolbar;
 
@@ -32,6 +38,8 @@ public class LoginActivity extends AppCompatActivity {
     TextInputEditText mTextInputPassword;
     Button mButtonLogin;
     AlertDialog mDialog;
+    FirebaseAuth mAuth;
+    DatabaseReference mDatabase;
 
 
     @Override
@@ -40,6 +48,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         MyToolbar.show(this,"Login usuario",true);
 
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         mTextInputEmail=findViewById(R.id.textInputEmail);
         mTextInputPassword=findViewById(R.id.textInputPassword);
@@ -49,15 +59,46 @@ public class LoginActivity extends AppCompatActivity {
         mButtonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                validarusuario("http://192.168.0.11//ejemploBDRemota/validar_usuario.php");
+               // validarusuario("http://192.168.0.11//ejemploBDRemota/validar_usuario.php");
                // gotoMap();
+                login();
             }
         });
 
     }
-    public void gotoMap(){
+    /*public void gotoMap(){
         Intent intent=new Intent(LoginActivity.this, MapClientActivity.class);
         startActivity(intent);
+    }*/
+    private void login() {
+        String email = mTextInputEmail.getText().toString();
+        String password = mTextInputPassword.getText().toString();
+
+        if (!email.isEmpty() && !password.isEmpty()) {
+            if (password.length() >= 6) {
+                mDialog.show();
+                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Intent intent=new Intent(LoginActivity.this, MapClientActivity.class);
+                            startActivity(intent);
+                            //Toast.makeText(LoginActivity.this, "El login se realizo exitosamente", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(LoginActivity.this, "La contraseña o el password son incorrectos", Toast.LENGTH_SHORT).show();
+                        }
+                        mDialog.dismiss();
+                    }
+                });
+            }
+            else {
+                Toast.makeText(this, "La contraseña debe tener mas de 6 caracteres", Toast.LENGTH_SHORT).show();
+            }
+        }
+        else {
+            Toast.makeText(this, "La contraseña y el email son obligatorios", Toast.LENGTH_SHORT).show();
+        }
     }
     private void validarusuario(String URL){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {

@@ -1,0 +1,283 @@
+<html>
+<head>
+<title>MapClientActivity.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #c792ea; font-style: italic;}
+.s1 { color: #eeffff;}
+.s2 { color: #89ddff;}
+.s3 { color: #f78c6c;}
+.s4 { color: #c3e88d;}
+.s5 { color: #616161; font-style: italic;}
+</style>
+</head>
+<body bgcolor="#212121">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+MapClientActivity.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">Activity</span><span class="s2">.</span><span class="s1">client</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">androidx</span><span class="s2">.</span><span class="s1">annotation</span><span class="s2">.</span><span class="s1">NonNull</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">androidx</span><span class="s2">.</span><span class="s1">annotation</span><span class="s2">.</span><span class="s1">Nullable</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">androidx</span><span class="s2">.</span><span class="s1">appcompat</span><span class="s2">.</span><span class="s1">app</span><span class="s2">.</span><span class="s1">AlertDialog</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">androidx</span><span class="s2">.</span><span class="s1">appcompat</span><span class="s2">.</span><span class="s1">app</span><span class="s2">.</span><span class="s1">AppCompatActivity</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">androidx</span><span class="s2">.</span><span class="s1">core</span><span class="s2">.</span><span class="s1">app</span><span class="s2">.</span><span class="s1">ActivityCompat</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">androidx</span><span class="s2">.</span><span class="s1">core</span><span class="s2">.</span><span class="s1">content</span><span class="s2">.</span><span class="s1">ContextCompat</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">android</span><span class="s2">.</span><span class="s1">Manifest</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">android</span><span class="s2">.</span><span class="s1">app</span><span class="s2">.</span><span class="s1">Activity</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">android</span><span class="s2">.</span><span class="s1">app</span><span class="s2">.</span><span class="s1">Dialog</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">android</span><span class="s2">.</span><span class="s1">content</span><span class="s2">.</span><span class="s1">Context</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">android</span><span class="s2">.</span><span class="s1">content</span><span class="s2">.</span><span class="s1">DialogInterface</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">android</span><span class="s2">.</span><span class="s1">content</span><span class="s2">.</span><span class="s1">Intent</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">android</span><span class="s2">.</span><span class="s1">content</span><span class="s2">.</span><span class="s1">pm</span><span class="s2">.</span><span class="s1">PackageManager</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">android</span><span class="s2">.</span><span class="s1">graphics</span><span class="s2">.</span><span class="s1">BitmapFactory</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">android</span><span class="s2">.</span><span class="s1">location</span><span class="s2">.</span><span class="s1">Location</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">android</span><span class="s2">.</span><span class="s1">location</span><span class="s2">.</span><span class="s1">LocationManager</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">android</span><span class="s2">.</span><span class="s1">os</span><span class="s2">.</span><span class="s1">Build</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">android</span><span class="s2">.</span><span class="s1">os</span><span class="s2">.</span><span class="s1">Bundle</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">android</span><span class="s2">.</span><span class="s1">os</span><span class="s2">.</span><span class="s1">Looper</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">android</span><span class="s2">.</span><span class="s1">provider</span><span class="s2">.</span><span class="s1">Settings</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">android</span><span class="s2">.</span><span class="s1">view</span><span class="s2">.</span><span class="s1">Menu</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">android</span><span class="s2">.</span><span class="s1">view</span><span class="s2">.</span><span class="s1">MenuItem</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">android</span><span class="s2">.</span><span class="s1">view</span><span class="s2">.</span><span class="s1">View</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">android</span><span class="s2">.</span><span class="s1">widget</span><span class="s2">.</span><span class="s1">Button</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">com</span><span class="s2">.</span><span class="s1">google</span><span class="s2">.</span><span class="s1">android</span><span class="s2">.</span><span class="s1">gms</span><span class="s2">.</span><span class="s1">location</span><span class="s2">.</span><span class="s1">FusedLocationProviderClient</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">com</span><span class="s2">.</span><span class="s1">google</span><span class="s2">.</span><span class="s1">android</span><span class="s2">.</span><span class="s1">gms</span><span class="s2">.</span><span class="s1">location</span><span class="s2">.</span><span class="s1">LocationCallback</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">com</span><span class="s2">.</span><span class="s1">google</span><span class="s2">.</span><span class="s1">android</span><span class="s2">.</span><span class="s1">gms</span><span class="s2">.</span><span class="s1">location</span><span class="s2">.</span><span class="s1">LocationRequest</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">com</span><span class="s2">.</span><span class="s1">google</span><span class="s2">.</span><span class="s1">android</span><span class="s2">.</span><span class="s1">gms</span><span class="s2">.</span><span class="s1">location</span><span class="s2">.</span><span class="s1">LocationResult</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">com</span><span class="s2">.</span><span class="s1">google</span><span class="s2">.</span><span class="s1">android</span><span class="s2">.</span><span class="s1">gms</span><span class="s2">.</span><span class="s1">location</span><span class="s2">.</span><span class="s1">LocationServices</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">com</span><span class="s2">.</span><span class="s1">google</span><span class="s2">.</span><span class="s1">android</span><span class="s2">.</span><span class="s1">gms</span><span class="s2">.</span><span class="s1">maps</span><span class="s2">.</span><span class="s1">CameraUpdateFactory</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">com</span><span class="s2">.</span><span class="s1">google</span><span class="s2">.</span><span class="s1">android</span><span class="s2">.</span><span class="s1">gms</span><span class="s2">.</span><span class="s1">maps</span><span class="s2">.</span><span class="s1">GoogleMap</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">com</span><span class="s2">.</span><span class="s1">google</span><span class="s2">.</span><span class="s1">android</span><span class="s2">.</span><span class="s1">gms</span><span class="s2">.</span><span class="s1">maps</span><span class="s2">.</span><span class="s1">OnMapReadyCallback</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">com</span><span class="s2">.</span><span class="s1">google</span><span class="s2">.</span><span class="s1">android</span><span class="s2">.</span><span class="s1">gms</span><span class="s2">.</span><span class="s1">maps</span><span class="s2">.</span><span class="s1">SupportMapFragment</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">com</span><span class="s2">.</span><span class="s1">google</span><span class="s2">.</span><span class="s1">android</span><span class="s2">.</span><span class="s1">gms</span><span class="s2">.</span><span class="s1">maps</span><span class="s2">.</span><span class="s1">model</span><span class="s2">.</span><span class="s1">BitmapDescriptor</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">com</span><span class="s2">.</span><span class="s1">google</span><span class="s2">.</span><span class="s1">android</span><span class="s2">.</span><span class="s1">gms</span><span class="s2">.</span><span class="s1">maps</span><span class="s2">.</span><span class="s1">model</span><span class="s2">.</span><span class="s1">BitmapDescriptorFactory</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">com</span><span class="s2">.</span><span class="s1">google</span><span class="s2">.</span><span class="s1">android</span><span class="s2">.</span><span class="s1">gms</span><span class="s2">.</span><span class="s1">maps</span><span class="s2">.</span><span class="s1">model</span><span class="s2">.</span><span class="s1">CameraPosition</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">com</span><span class="s2">.</span><span class="s1">google</span><span class="s2">.</span><span class="s1">android</span><span class="s2">.</span><span class="s1">gms</span><span class="s2">.</span><span class="s1">maps</span><span class="s2">.</span><span class="s1">model</span><span class="s2">.</span><span class="s1">LatLng</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">com</span><span class="s2">.</span><span class="s1">google</span><span class="s2">.</span><span class="s1">android</span><span class="s2">.</span><span class="s1">gms</span><span class="s2">.</span><span class="s1">maps</span><span class="s2">.</span><span class="s1">model</span><span class="s2">.</span><span class="s1">Marker</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">com</span><span class="s2">.</span><span class="s1">google</span><span class="s2">.</span><span class="s1">android</span><span class="s2">.</span><span class="s1">gms</span><span class="s2">.</span><span class="s1">maps</span><span class="s2">.</span><span class="s1">model</span><span class="s2">.</span><span class="s1">MarkerOptions</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">com</span><span class="s2">.</span><span class="s1">joel</span><span class="s2">.</span><span class="s1">proyectogrado</span><span class="s2">.</span><span class="s1">R</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">com</span><span class="s2">.</span><span class="s1">joel</span><span class="s2">.</span><span class="s1">proyectogrado</span><span class="s2">.</span><span class="s1">UpdateinfoActivity</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">Activity</span><span class="s2">.</span><span class="s1">MainActivity</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">include</span><span class="s2">.</span><span class="s1">MyToolbar</span><span class="s2">;</span>
+
+<span class="s0">public class </span><span class="s1">MapClientActivity </span><span class="s0">extends </span><span class="s1">AppCompatActivity </span><span class="s0">implements </span><span class="s1">OnMapReadyCallback </span><span class="s2">{</span>
+
+    <span class="s0">private </span><span class="s1">GoogleMap mMap</span><span class="s2">;</span>
+    <span class="s1">SupportMapFragment mMapFragment</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">LocationRequest mLocationRequest</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">FusedLocationProviderClient mFusedLocation</span><span class="s2">;</span>
+    <span class="s0">private final static int </span><span class="s1">LOCATION_REQUEST_CODE </span><span class="s2">= </span><span class="s3">1</span><span class="s2">;</span>
+    <span class="s0">private final static int </span><span class="s1">SETTINGS_REQUEST_CODE </span><span class="s2">= </span><span class="s3">2</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">Marker mMarker</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">Button mButtonConnect</span><span class="s2">;</span>
+    <span class="s0">private boolean </span><span class="s1">mIsconnect</span><span class="s2">=</span><span class="s0">false</span><span class="s2">;</span>
+    <span class="s1">LocationCallback mLocationCallback </span><span class="s2">= </span><span class="s0">new </span><span class="s1">LocationCallback</span><span class="s2">() {</span>
+        <span class="s1">@Override</span>
+        <span class="s0">public void </span><span class="s1">onLocationResult</span><span class="s2">(</span><span class="s1">LocationResult locationResult</span><span class="s2">) {</span>
+            <span class="s0">for </span><span class="s2">(</span><span class="s1">Location location </span><span class="s2">: </span><span class="s1">locationResult</span><span class="s2">.</span><span class="s1">getLocations</span><span class="s2">()) {</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">getApplicationContext</span><span class="s2">() != </span><span class="s0">null</span><span class="s2">) {</span>
+                    <span class="s0">if </span><span class="s2">(</span><span class="s1">mMarker </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">){</span>
+                        <span class="s1">mMarker</span><span class="s2">.</span><span class="s1">remove</span><span class="s2">();</span>
+
+                    <span class="s2">}</span>
+                    <span class="s1">mMarker</span><span class="s2">=</span><span class="s1">mMap</span><span class="s2">.</span><span class="s1">addMarker</span><span class="s2">(</span><span class="s0">new </span><span class="s1">MarkerOptions</span><span class="s2">().</span><span class="s1">position</span><span class="s2">(</span>
+                            <span class="s0">new </span><span class="s1">LatLng</span><span class="s2">(</span><span class="s1">location</span><span class="s2">.</span><span class="s1">getLatitude</span><span class="s2">(), </span><span class="s1">location</span><span class="s2">.</span><span class="s1">getLongitude</span><span class="s2">())</span>
+                    <span class="s2">)</span>
+                            <span class="s2">.</span><span class="s1">title</span><span class="s2">(</span><span class="s4">&quot;Tu posicion&quot;</span><span class="s2">)</span>
+                            <span class="s2">.</span><span class="s1">icon</span><span class="s2">(</span><span class="s1">BitmapDescriptorFactory</span><span class="s2">.</span><span class="s1">fromResource</span><span class="s2">(</span><span class="s1">R</span><span class="s2">.</span><span class="s1">drawable</span><span class="s2">.</span><span class="s1">iconuser</span><span class="s2">))</span>
+                    <span class="s2">);</span>
+                    <span class="s5">//OBTENER LA LOCALIZACION DEL USUARIO EN TIEMPO REAL</span>
+                    <span class="s1">mMap</span><span class="s2">.</span><span class="s1">moveCamera</span><span class="s2">(</span><span class="s1">CameraUpdateFactory</span><span class="s2">.</span><span class="s1">newCameraPosition</span><span class="s2">(</span>
+                            <span class="s0">new </span><span class="s1">CameraPosition</span><span class="s2">.</span><span class="s1">Builder</span><span class="s2">()</span>
+                                    <span class="s2">.</span><span class="s1">target</span><span class="s2">(</span><span class="s0">new </span><span class="s1">LatLng</span><span class="s2">(</span><span class="s1">location</span><span class="s2">.</span><span class="s1">getLatitude</span><span class="s2">(), </span><span class="s1">location</span><span class="s2">.</span><span class="s1">getLongitude</span><span class="s2">()))</span>
+                                    <span class="s2">.</span><span class="s1">zoom</span><span class="s2">(</span><span class="s3">16f</span><span class="s2">)</span>
+                                    <span class="s2">.</span><span class="s1">build</span><span class="s2">()</span>
+                    <span class="s2">));</span>
+                <span class="s2">}</span>
+
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+    <span class="s2">};</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onCreate</span><span class="s2">(</span><span class="s1">Bundle savedInstanceState</span><span class="s2">) {</span>
+        <span class="s0">super</span><span class="s2">.</span><span class="s1">onCreate</span><span class="s2">(</span><span class="s1">savedInstanceState</span><span class="s2">);</span>
+        <span class="s1">setContentView</span><span class="s2">(</span><span class="s1">R</span><span class="s2">.</span><span class="s1">layout</span><span class="s2">.</span><span class="s1">activity_map_client</span><span class="s2">);</span>
+        <span class="s1">MyToolbar</span><span class="s2">.</span><span class="s1">show</span><span class="s2">(</span><span class="s0">this</span><span class="s2">, </span><span class="s4">&quot;Cliente&quot;</span><span class="s2">, </span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s5">//Con esto podremos detener la ubicacion</span>
+        <span class="s1">mFusedLocation </span><span class="s2">= </span><span class="s1">LocationServices</span><span class="s2">.</span><span class="s1">getFusedLocationProviderClient</span><span class="s2">(</span><span class="s0">this</span><span class="s2">);</span>
+        <span class="s1">mMapFragment </span><span class="s2">= (</span><span class="s1">SupportMapFragment</span><span class="s2">) </span><span class="s1">getSupportFragmentManager</span><span class="s2">().</span><span class="s1">findFragmentById</span><span class="s2">(</span><span class="s1">R</span><span class="s2">.</span><span class="s1">id</span><span class="s2">.</span><span class="s1">map</span><span class="s2">);</span>
+        <span class="s1">mMapFragment</span><span class="s2">.</span><span class="s1">getMapAsync</span><span class="s2">(</span><span class="s0">this</span><span class="s2">);</span>
+        <span class="s1">mButtonConnect</span><span class="s2">=</span><span class="s1">findViewById</span><span class="s2">(</span><span class="s1">R</span><span class="s2">.</span><span class="s1">id</span><span class="s2">.</span><span class="s1">btnConnect</span><span class="s2">);</span>
+        <span class="s1">mButtonConnect</span><span class="s2">.</span><span class="s1">setOnClickListener</span><span class="s2">(</span><span class="s0">new </span><span class="s1">View</span><span class="s2">.</span><span class="s1">OnClickListener</span><span class="s2">() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">onClick</span><span class="s2">(</span><span class="s1">View v</span><span class="s2">) {</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">mIsconnect</span><span class="s2">){</span>
+                    <span class="s1">disconect</span><span class="s2">();</span>
+                <span class="s2">}</span><span class="s0">else</span><span class="s2">{</span>
+                    <span class="s1">StartLocation</span><span class="s2">();</span>
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+        <span class="s2">});</span>
+    <span class="s2">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">onRequestPermissionsResult</span><span class="s2">(</span><span class="s0">int </span><span class="s1">requestCode</span><span class="s2">, </span><span class="s1">@NonNull String</span><span class="s2">[] </span><span class="s1">permissions</span><span class="s2">, </span><span class="s1">@NonNull </span><span class="s0">int</span><span class="s2">[] </span><span class="s1">grantResults</span><span class="s2">) {</span>
+        <span class="s0">super</span><span class="s2">.</span><span class="s1">onRequestPermissionsResult</span><span class="s2">(</span><span class="s1">requestCode</span><span class="s2">, </span><span class="s1">permissions</span><span class="s2">, </span><span class="s1">grantResults</span><span class="s2">);</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">requestCode </span><span class="s2">== </span><span class="s1">LOCATION_REQUEST_CODE</span><span class="s2">) {</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">grantResults</span><span class="s2">.</span><span class="s1">length </span><span class="s2">&gt; </span><span class="s3">0 </span><span class="s2">&amp;&amp; </span><span class="s1">grantResults</span><span class="s2">[</span><span class="s3">0</span><span class="s2">] == </span><span class="s1">PackageManager</span><span class="s2">.</span><span class="s1">PERMISSION_GRANTED</span><span class="s2">) {</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">ContextCompat</span><span class="s2">.</span><span class="s1">checkSelfPermission</span><span class="s2">(</span><span class="s0">this</span><span class="s2">, </span><span class="s1">Manifest</span><span class="s2">.</span><span class="s1">permission</span><span class="s2">.</span><span class="s1">ACCESS_FINE_LOCATION</span><span class="s2">) == </span><span class="s1">PackageManager</span><span class="s2">.</span><span class="s1">PERMISSION_GRANTED</span><span class="s2">) {</span>
+                    <span class="s0">if </span><span class="s2">(</span><span class="s1">gpsActive</span><span class="s2">()) {</span>
+                        <span class="s1">mFusedLocation</span><span class="s2">.</span><span class="s1">requestLocationUpdates</span><span class="s2">(</span><span class="s1">mLocationRequest</span><span class="s2">, </span><span class="s1">mLocationCallback</span><span class="s2">, </span><span class="s1">Looper</span><span class="s2">.</span><span class="s1">myLooper</span><span class="s2">());</span>
+                        <span class="s1">mMap</span><span class="s2">.</span><span class="s1">setMyLocationEnabled</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+                    <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                        <span class="s1">ShowAlerDialogNOGPS</span><span class="s2">();</span>
+                    <span class="s2">}</span>
+                <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                    <span class="s1">CheckLocationPermission</span><span class="s2">();</span>
+                <span class="s2">}</span>
+            <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                <span class="s1">CheckLocationPermission</span><span class="s2">();</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onActivityResult</span><span class="s2">(</span><span class="s0">int </span><span class="s1">requestCode</span><span class="s2">, </span><span class="s0">int </span><span class="s1">resultCode</span><span class="s2">, </span><span class="s1">@Nullable Intent data</span><span class="s2">) {</span>
+        <span class="s0">super</span><span class="s2">.</span><span class="s1">onActivityResult</span><span class="s2">(</span><span class="s1">requestCode</span><span class="s2">, </span><span class="s1">resultCode</span><span class="s2">, </span><span class="s1">data</span><span class="s2">);</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">requestCode </span><span class="s2">== </span><span class="s1">SETTINGS_REQUEST_CODE </span><span class="s2">&amp;&amp; </span><span class="s1">gpsActive</span><span class="s2">()) {</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">ActivityCompat</span><span class="s2">.</span><span class="s1">checkSelfPermission</span><span class="s2">(</span><span class="s0">this</span><span class="s2">, </span><span class="s1">Manifest</span><span class="s2">.</span><span class="s1">permission</span><span class="s2">.</span><span class="s1">ACCESS_FINE_LOCATION</span><span class="s2">) != </span><span class="s1">PackageManager</span><span class="s2">.</span><span class="s1">PERMISSION_GRANTED </span><span class="s2">&amp;&amp; </span><span class="s1">ActivityCompat</span><span class="s2">.</span><span class="s1">checkSelfPermission</span><span class="s2">(</span><span class="s0">this</span><span class="s2">, </span><span class="s1">Manifest</span><span class="s2">.</span><span class="s1">permission</span><span class="s2">.</span><span class="s1">ACCESS_COARSE_LOCATION</span><span class="s2">) != </span><span class="s1">PackageManager</span><span class="s2">.</span><span class="s1">PERMISSION_GRANTED</span><span class="s2">) {</span>
+                <span class="s0">return</span><span class="s2">;</span>
+            <span class="s2">}</span>
+            <span class="s1">mFusedLocation</span><span class="s2">.</span><span class="s1">requestLocationUpdates</span><span class="s2">(</span><span class="s1">mLocationRequest</span><span class="s2">, </span><span class="s1">mLocationCallback</span><span class="s2">, </span><span class="s1">Looper</span><span class="s2">.</span><span class="s1">myLooper</span><span class="s2">());</span>
+            <span class="s1">mMap</span><span class="s2">.</span><span class="s1">setMyLocationEnabled</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+        <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+            <span class="s1">ShowAlerDialogNOGPS</span><span class="s2">();</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private void </span><span class="s1">ShowAlerDialogNOGPS</span><span class="s2">() {</span>
+        <span class="s1">AlertDialog</span><span class="s2">.</span><span class="s1">Builder builder </span><span class="s2">= </span><span class="s0">new </span><span class="s1">AlertDialog</span><span class="s2">.</span><span class="s1">Builder</span><span class="s2">(</span><span class="s0">this</span><span class="s2">);</span>
+        <span class="s1">builder</span><span class="s2">.</span><span class="s1">setMessage</span><span class="s2">(</span><span class="s4">&quot;Por favor activa tu ubicacion para continuar&quot;</span><span class="s2">)</span>
+                <span class="s2">.</span><span class="s1">setPositiveButton</span><span class="s2">(</span><span class="s4">&quot;configuraciones&quot;</span><span class="s2">, </span><span class="s0">new </span><span class="s1">DialogInterface</span><span class="s2">.</span><span class="s1">OnClickListener</span><span class="s2">() {</span>
+                    <span class="s1">@Override</span>
+                    <span class="s0">public void </span><span class="s1">onClick</span><span class="s2">(</span><span class="s1">DialogInterface dialog</span><span class="s2">, </span><span class="s0">int </span><span class="s1">which</span><span class="s2">) {</span>
+                        <span class="s1">startActivityForResult</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Intent</span><span class="s2">(</span><span class="s1">Settings</span><span class="s2">.</span><span class="s1">ACTION_LOCATION_SOURCE_SETTINGS</span><span class="s2">), </span><span class="s1">SETTINGS_REQUEST_CODE</span><span class="s2">);</span>
+                    <span class="s2">}</span>
+                <span class="s2">}).</span><span class="s1">create</span><span class="s2">().</span><span class="s1">show</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private boolean </span><span class="s1">gpsActive</span><span class="s2">() {</span>
+        <span class="s0">boolean </span><span class="s1">isActive </span><span class="s2">= </span><span class="s0">false</span><span class="s2">;</span>
+        <span class="s1">LocationManager locationManager </span><span class="s2">= (</span><span class="s1">LocationManager</span><span class="s2">) </span><span class="s1">getSystemService</span><span class="s2">(</span><span class="s1">Context</span><span class="s2">.</span><span class="s1">LOCATION_SERVICE</span><span class="s2">);</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">locationManager</span><span class="s2">.</span><span class="s1">isProviderEnabled</span><span class="s2">(</span><span class="s1">LocationManager</span><span class="s2">.</span><span class="s1">GPS_PROVIDER</span><span class="s2">)) {</span>
+            <span class="s1">isActive </span><span class="s2">= </span><span class="s0">true</span><span class="s2">;</span>
+        <span class="s2">}</span>
+        <span class="s0">return </span><span class="s1">isActive</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    <span class="s0">private void  </span><span class="s1">disconect</span><span class="s2">(){</span>
+        <span class="s1">mButtonConnect</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s4">&quot;Conectarse&quot;</span><span class="s2">);</span>
+        <span class="s1">mIsconnect</span><span class="s2">=</span><span class="s0">false</span><span class="s2">;</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">mFusedLocation</span><span class="s2">!=</span><span class="s0">null</span><span class="s2">){</span>
+            <span class="s1">mFusedLocation</span><span class="s2">.</span><span class="s1">removeLocationUpdates</span><span class="s2">(</span><span class="s1">mLocationCallback</span><span class="s2">);</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+    <span class="s0">private void </span><span class="s1">StartLocation</span><span class="s2">() {</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">Build</span><span class="s2">.</span><span class="s1">VERSION</span><span class="s2">.</span><span class="s1">SDK_INT </span><span class="s2">&gt;= </span><span class="s1">Build</span><span class="s2">.</span><span class="s1">VERSION_CODES</span><span class="s2">.</span><span class="s1">M</span><span class="s2">) {</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">ContextCompat</span><span class="s2">.</span><span class="s1">checkSelfPermission</span><span class="s2">(</span><span class="s0">this</span><span class="s2">, </span><span class="s1">Manifest</span><span class="s2">.</span><span class="s1">permission</span><span class="s2">.</span><span class="s1">ACCESS_FINE_LOCATION</span><span class="s2">) == </span><span class="s1">PackageManager</span><span class="s2">.</span><span class="s1">PERMISSION_GRANTED</span><span class="s2">) {</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">gpsActive</span><span class="s2">()) {</span>
+                    <span class="s1">mButtonConnect</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s4">&quot;Desconectarse&quot;</span><span class="s2">);</span>
+                    <span class="s1">mIsconnect</span><span class="s2">=</span><span class="s0">true</span><span class="s2">;</span>
+                    <span class="s1">mFusedLocation</span><span class="s2">.</span><span class="s1">requestLocationUpdates</span><span class="s2">(</span><span class="s1">mLocationRequest</span><span class="s2">, </span><span class="s1">mLocationCallback</span><span class="s2">, </span><span class="s1">Looper</span><span class="s2">.</span><span class="s1">myLooper</span><span class="s2">());</span>
+                    <span class="s1">mMap</span><span class="s2">.</span><span class="s1">setMyLocationEnabled</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+                <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                    <span class="s1">ShowAlerDialogNOGPS</span><span class="s2">();</span>
+                <span class="s2">}</span>
+            <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                <span class="s1">CheckLocationPermission</span><span class="s2">();</span>
+            <span class="s2">}</span>
+        <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">gpsActive</span><span class="s2">()) {</span>
+                <span class="s1">mFusedLocation</span><span class="s2">.</span><span class="s1">requestLocationUpdates</span><span class="s2">(</span><span class="s1">mLocationRequest</span><span class="s2">, </span><span class="s1">mLocationCallback</span><span class="s2">, </span><span class="s1">Looper</span><span class="s2">.</span><span class="s1">myLooper</span><span class="s2">());</span>
+                <span class="s1">mMap</span><span class="s2">.</span><span class="s1">setMyLocationEnabled</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+            <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                <span class="s1">ShowAlerDialogNOGPS</span><span class="s2">();</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private void </span><span class="s1">CheckLocationPermission</span><span class="s2">() {</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">ContextCompat</span><span class="s2">.</span><span class="s1">checkSelfPermission</span><span class="s2">(</span><span class="s0">this</span><span class="s2">, </span><span class="s1">Manifest</span><span class="s2">.</span><span class="s1">permission</span><span class="s2">.</span><span class="s1">ACCESS_FINE_LOCATION</span><span class="s2">) != </span><span class="s1">PackageManager</span><span class="s2">.</span><span class="s1">PERMISSION_GRANTED</span><span class="s2">) {</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">ActivityCompat</span><span class="s2">.</span><span class="s1">shouldShowRequestPermissionRationale</span><span class="s2">(</span><span class="s0">this</span><span class="s2">, </span><span class="s1">Manifest</span><span class="s2">.</span><span class="s1">permission</span><span class="s2">.</span><span class="s1">ACCESS_FINE_LOCATION</span><span class="s2">)) {</span>
+                <span class="s0">new </span><span class="s1">AlertDialog</span><span class="s2">.</span><span class="s1">Builder</span><span class="s2">(</span><span class="s0">this</span><span class="s2">)</span>
+                        <span class="s2">.</span><span class="s1">setTitle</span><span class="s2">(</span><span class="s4">&quot;Proporciona los permisos para continuar&quot;</span><span class="s2">)</span>
+                        <span class="s2">.</span><span class="s1">setMessage</span><span class="s2">(</span><span class="s4">&quot;Esta aplicacion requiere de los permisos de ubicacion para poder utilizarse&quot;</span><span class="s2">)</span>
+                        <span class="s2">.</span><span class="s1">setPositiveButton</span><span class="s2">(</span><span class="s4">&quot;Ok&quot;</span><span class="s2">, </span><span class="s0">new </span><span class="s1">DialogInterface</span><span class="s2">.</span><span class="s1">OnClickListener</span><span class="s2">() {</span>
+                            <span class="s1">@Override</span>
+                            <span class="s0">public void </span><span class="s1">onClick</span><span class="s2">(</span><span class="s1">DialogInterface dialog</span><span class="s2">, </span><span class="s0">int </span><span class="s1">which</span><span class="s2">) {</span>
+                                <span class="s1">ActivityCompat</span><span class="s2">.</span><span class="s1">requestPermissions</span><span class="s2">(</span><span class="s1">MapClientActivity</span><span class="s2">.</span><span class="s0">this</span><span class="s2">, </span><span class="s0">new </span><span class="s1">String</span><span class="s2">[]{</span><span class="s1">Manifest</span><span class="s2">.</span><span class="s1">permission</span><span class="s2">.</span><span class="s1">ACCESS_FINE_LOCATION</span><span class="s2">}, </span><span class="s1">LOCATION_REQUEST_CODE</span><span class="s2">);</span>
+                            <span class="s2">}</span>
+                        <span class="s2">})</span>
+                        <span class="s2">.</span><span class="s1">create</span><span class="s2">()</span>
+                        <span class="s2">.</span><span class="s1">show</span><span class="s2">();</span>
+
+            <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                <span class="s1">ActivityCompat</span><span class="s2">.</span><span class="s1">requestPermissions</span><span class="s2">(</span><span class="s1">MapClientActivity</span><span class="s2">.</span><span class="s0">this</span><span class="s2">, </span><span class="s0">new </span><span class="s1">String</span><span class="s2">[]{</span><span class="s1">Manifest</span><span class="s2">.</span><span class="s1">permission</span><span class="s2">.</span><span class="s1">ACCESS_FINE_LOCATION</span><span class="s2">}, </span><span class="s1">LOCATION_REQUEST_CODE</span><span class="s2">);</span>
+
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">public boolean </span><span class="s1">onCreateOptionsMenu</span><span class="s2">(</span><span class="s1">Menu menu</span><span class="s2">) {</span>
+        <span class="s1">getMenuInflater</span><span class="s2">().</span><span class="s1">inflate</span><span class="s2">(</span><span class="s1">R</span><span class="s2">.</span><span class="s1">menu</span><span class="s2">.</span><span class="s1">client_menu</span><span class="s2">, </span><span class="s1">menu</span><span class="s2">);</span>
+
+        <span class="s0">return super</span><span class="s2">.</span><span class="s1">onCreateOptionsMenu</span><span class="s2">(</span><span class="s1">menu</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">public boolean </span><span class="s1">onOptionsItemSelected</span><span class="s2">(</span><span class="s1">@NonNull MenuItem item</span><span class="s2">) {</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">item</span><span class="s2">.</span><span class="s1">getItemId</span><span class="s2">() == </span><span class="s1">R</span><span class="s2">.</span><span class="s1">id</span><span class="s2">.</span><span class="s1">action_logout</span><span class="s2">) {</span>
+            <span class="s1">logout</span><span class="s2">();</span>
+        <span class="s2">} </span><span class="s0">else if </span><span class="s2">(</span><span class="s1">item</span><span class="s2">.</span><span class="s1">getItemId</span><span class="s2">() == </span><span class="s1">R</span><span class="s2">.</span><span class="s1">id</span><span class="s2">.</span><span class="s1">editar_informacion</span><span class="s2">) {</span>
+            <span class="s1">Update</span><span class="s2">();</span>
+        <span class="s2">}</span>
+        <span class="s0">return super</span><span class="s2">.</span><span class="s1">onOptionsItemSelected</span><span class="s2">(</span><span class="s1">item</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">void </span><span class="s1">Update</span><span class="s2">() {</span>
+        <span class="s1">Intent intent </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Intent</span><span class="s2">(</span><span class="s1">MapClientActivity</span><span class="s2">.</span><span class="s0">this</span><span class="s2">, </span><span class="s1">UpdateinfoActivity</span><span class="s2">.</span><span class="s0">class</span><span class="s2">);</span>
+        <span class="s1">startActivity</span><span class="s2">(</span><span class="s1">intent</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">void </span><span class="s1">logout</span><span class="s2">() {</span>
+        <span class="s1">Intent intent </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Intent</span><span class="s2">(</span><span class="s1">MapClientActivity</span><span class="s2">.</span><span class="s0">this</span><span class="s2">, </span><span class="s1">MainActivity</span><span class="s2">.</span><span class="s0">class</span><span class="s2">);</span>
+        <span class="s1">startActivity</span><span class="s2">(</span><span class="s1">intent</span><span class="s2">);</span>
+        <span class="s1">finish</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">onMapReady</span><span class="s2">(</span><span class="s1">@NonNull GoogleMap googleMap</span><span class="s2">) {</span>
+        <span class="s1">mMap </span><span class="s2">= </span><span class="s1">googleMap</span><span class="s2">;</span>
+        <span class="s1">mMap</span><span class="s2">.</span><span class="s1">setMapType</span><span class="s2">(</span><span class="s1">GoogleMap</span><span class="s2">.</span><span class="s1">MAP_TYPE_NORMAL</span><span class="s2">);</span>
+        <span class="s1">mMap</span><span class="s2">.</span><span class="s1">getUiSettings</span><span class="s2">().</span><span class="s1">setZoomControlsEnabled</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">ActivityCompat</span><span class="s2">.</span><span class="s1">checkSelfPermission</span><span class="s2">(</span><span class="s0">this</span><span class="s2">, </span><span class="s1">Manifest</span><span class="s2">.</span><span class="s1">permission</span><span class="s2">.</span><span class="s1">ACCESS_FINE_LOCATION</span><span class="s2">) != </span><span class="s1">PackageManager</span><span class="s2">.</span><span class="s1">PERMISSION_GRANTED </span><span class="s2">&amp;&amp; </span><span class="s1">ActivityCompat</span><span class="s2">.</span><span class="s1">checkSelfPermission</span><span class="s2">(</span><span class="s0">this</span><span class="s2">, </span><span class="s1">Manifest</span><span class="s2">.</span><span class="s1">permission</span><span class="s2">.</span><span class="s1">ACCESS_COARSE_LOCATION</span><span class="s2">) != </span><span class="s1">PackageManager</span><span class="s2">.</span><span class="s1">PERMISSION_GRANTED</span><span class="s2">) {</span>
+            <span class="s0">return</span><span class="s2">;</span>
+        <span class="s2">}</span>
+        <span class="s1">mLocationRequest</span><span class="s2">=</span><span class="s0">new </span><span class="s1">LocationRequest</span><span class="s2">();</span>
+        <span class="s1">mLocationRequest</span><span class="s2">.</span><span class="s1">setInterval</span><span class="s2">(</span><span class="s3">1000</span><span class="s2">);</span>
+        <span class="s1">mLocationRequest</span><span class="s2">.</span><span class="s1">setFastestInterval</span><span class="s2">(</span><span class="s3">1000</span><span class="s2">);</span>
+        <span class="s1">mLocationRequest</span><span class="s2">.</span><span class="s1">setPriority</span><span class="s2">(</span><span class="s1">LocationRequest</span><span class="s2">.</span><span class="s1">PRIORITY_HIGH_ACCURACY</span><span class="s2">);</span>
+        <span class="s1">mLocationRequest</span><span class="s2">.</span><span class="s1">setSmallestDisplacement</span><span class="s2">(</span><span class="s3">5</span><span class="s2">);</span>
+        <span class="s1">StartLocation</span><span class="s2">();</span>
+
+    <span class="s2">}</span>
+<span class="s2">}</span></pre>
+</body>
+</html>

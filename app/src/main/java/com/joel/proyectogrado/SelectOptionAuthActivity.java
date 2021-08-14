@@ -1,4 +1,4 @@
-package Activity;
+package com.joel.proyectogrado;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,10 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.joel.proyectogrado.R;
-
-import Activity.client.RegisterActivity;
-import Activity.drive.Register2;
+import com.joel.proyectogrado.client.RegisterActivity;
+import com.joel.proyectogrado.drive.Register2;
 import include.MyToolbar;
 
 public class SelectOptionAuthActivity extends AppCompatActivity {
@@ -49,12 +47,12 @@ public class SelectOptionAuthActivity extends AppCompatActivity {
         startActivity(intent);
     }
     public void goToRegister(){
-        String selectedUser= mPref.getString("user","");
-        if (selectedUser.equals("driver")) {
-            Intent intent = new Intent(SelectOptionAuthActivity.this, Register2.class);
+        String selectedUser= mPref.getString("User","");
+        if (selectedUser.equals("Activity/Client")) {
+            Intent intent = new Intent(SelectOptionAuthActivity.this, RegisterActivity.class);
             startActivity(intent);
         }else{
-            Intent intent = new Intent(SelectOptionAuthActivity.this, RegisterActivity.class);
+            Intent intent = new Intent(SelectOptionAuthActivity.this, Register2.class);
             startActivity(intent);
         }
     }

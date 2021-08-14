@@ -1,4 +1,4 @@
-package Activity.client;
+package com.joel.proyectogrado.client;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -8,13 +8,10 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -35,7 +32,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -44,7 +40,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.joel.proyectogrado.R;
 import com.joel.proyectogrado.UpdateinfoActivity;
 
-import Activity.MainActivity;
+import com.joel.proyectogrado.MainActivity;
 import include.MyToolbar;
 
 public class MapClientActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -56,13 +52,17 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
     private final static int LOCATION_REQUEST_CODE = 1;
     private final static int SETTINGS_REQUEST_CODE = 2;
     private Marker mMarker;
+    private AuthProvider mAuthProvider;
+    private GeofireProvider mGeoFireProvider;
     private Button mButtonConnect;
     private boolean mIsconnect=false;
+    private LatLng mCurrentLatLng;
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
             for (Location location : locationResult.getLocations()) {
                 if (getApplicationContext() != null) {
+                    mCurrentLatLng=new LatLng(location.getLatitude(),location.getLongitude());
                     if (mMarker != null){
                         mMarker.remove();
 
@@ -80,6 +80,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
                                     .zoom(16f)
                                     .build()
                     ));
+                    updateLocation();
                 }
 
             }
@@ -96,6 +97,8 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         mMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mMapFragment.getMapAsync(this);
         mButtonConnect=findViewById(R.id.btnConnect);
+        mAuthProvider=new AuthProvider();
+        mGeoFireProvider=new GeofireProvider();
         mButtonConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -242,7 +245,10 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         startActivity(intent);
         finish();
     }
+    private void updateLocation(){
+        mGeoFireProvider.SaveLocation(mAuthProvider.getId(), mCurrentLatLng);
 
+    }
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="Activity.client.MapClientActivity">
+    tools:context=".client.MapClientActivity">
     <include layout="@layout/action_bar_toolbar"/>
 
     <fragment

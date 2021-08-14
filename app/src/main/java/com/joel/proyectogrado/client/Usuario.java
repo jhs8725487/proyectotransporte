@@ -1,7 +1,9 @@
-package Activity.client;
+package com.joel.proyectogrado.client;
 
 public class Usuario {
 
+
+    String id;
     String Nombre;
     String Apellidos;
     String Genero;
@@ -9,14 +11,32 @@ public class Usuario {
     String Correo;
     String Contra;
 
-    public Usuario(String nombre, String apellidos, String genero, String telefono, String correo, String contra) {
+    public Usuario() {
+    }
 
+    public Usuario(String id,String nombre, String apellidos, String genero, String telefono, String correo, String contra) {
+        this.id=id;
         this.Nombre = nombre;
         this.Apellidos = apellidos;
         this.Genero = genero;
         this.Telefono = telefono;
         this.Correo = correo;
         this.Contra = contra;
+    }
+    public Usuario(String nombre, String apellidos, String genero, String telefono, String correo, String contra) {
+        this.Nombre = nombre;
+        this.Apellidos = apellidos;
+        this.Genero = genero;
+        this.Telefono = telefono;
+        this.Correo = correo;
+        this.Contra = contra;
+    }
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
     public String getNombre() {
         return Nombre;

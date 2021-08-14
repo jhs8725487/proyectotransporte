@@ -1,4 +1,4 @@
-package Activity;
+package com.joel.proyectogrado;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,8 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-
-import com.joel.proyectogrado.R;
 
 public class MainActivity extends AppCompatActivity {
     Button mButtonIAmClient;
@@ -31,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 goToSelectAuth();
-                editor.putString("user", "Activity/client");
+                editor.putString("User", "Activity/Client");
                 editor.apply();
             }
         });
@@ -39,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 goToSelectAuth();
-                editor.putString("user", "driver");
+                editor.putString("User", "Driver");
                 editor.apply();
             }
         });

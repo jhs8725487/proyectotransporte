@@ -1,4 +1,4 @@
-package Activity.drive;
+package com.joel.proyectogrado.drive;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,7 +11,7 @@ import android.widget.RadioButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.joel.proyectogrado.R;
 
-import Activity.client.Usuario;
+import com.joel.proyectogrado.client.Usuario;
 import include.MyToolbar;
 
 public class Register2 extends AppCompatActivity {

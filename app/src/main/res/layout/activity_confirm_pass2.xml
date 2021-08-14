@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="Activity.drive.ConfirmPassActivity2">
+    tools:context=".drive.ConfirmPassActivity2">
     <include layout="@layout/action_bar_toolbar"></include>
     <LinearLayout
         android:layout_width="match_parent"
