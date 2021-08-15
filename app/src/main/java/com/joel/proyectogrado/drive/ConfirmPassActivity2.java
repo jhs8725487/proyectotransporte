@@ -1,8 +1,11 @@
 package com.joel.proyectogrado.drive;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,14 +25,25 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.joel.proyectogrado.R;
+import com.joel.proyectogrado.client.RegisterActivity;
+import com.joel.proyectogrado.models.Client;
+import com.joel.proyectogrado.models.Driver;
+import com.joel.proyectogrado.providers.AuthProvider;
+import com.joel.proyectogrado.providers.ClientProvider;
+import com.joel.proyectogrado.providers.DriverProvider;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import dmax.dialog.SpotsDialog;
 import include.MyToolbar;
 
 public class ConfirmPassActivity2 extends AppCompatActivity {
@@ -41,6 +55,11 @@ public class ConfirmPassActivity2 extends AppCompatActivity {
     Button mButonRegister;
     Conductor conductor;
     Bundle miBundle;
+    AuthProvider mAuthProvider;
+    AlertDialog mDialog;
+    SharedPreferences mPref;
+    ClientProvider mClientProvider;
+    DriverProvider mDriverProvider;
     private int PICK_IMAGE_REQUEST = 1;
     private Bitmap bitmap;
     @Override
@@ -48,7 +67,12 @@ public class ConfirmPassActivity2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm_pass2);
 
+        mAuthProvider=new AuthProvider();
+        mClientProvider=new ClientProvider();
+        mDriverProvider=new DriverProvider();
 
+        mPref=getApplicationContext().getSharedPreferences("typeUser", MODE_PRIVATE);
+        mDialog= new SpotsDialog.Builder().setContext(ConfirmPassActivity2.this).setMessage("Espere un momento").build();
 
         mTextInputConfirmPassword=(TextInputEditText) findViewById(R.id.textInputConfirmPassword);
         mTextInputCedula=(TextInputEditText) findViewById(R.id.textInputCedula);
@@ -67,15 +91,70 @@ public class ConfirmPassActivity2 extends AppCompatActivity {
                 String password=miBundle.getString("Password");
                 String password2=mTextInputConfirmPassword.getText().toString();
                 if (password.equals(password2)) {
-                    ejecutarServicio("http://192.168.0.18//ejemploBDRemota/insertar_usuario.php");
-                    ejecutarServicio2("http://192.168.0.18//ejemploBDRemota/upload.php");
-                getStringImagen(bitmap);
+                   // ejecutarServicio("http://192.168.0.18//ejemploBDRemota/insertar_usuario.php");
+                    //ejecutarServicio2("http://192.168.0.18//ejemploBDRemota/upload.php");
+               // getStringImagen(bitmap);
+                    clickRegister();
                 }else{
                     Toast.makeText(ConfirmPassActivity2.this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
+
+    void clickRegister(){
+        if (miBundle!=null) {
+            final String Nombre = miBundle.getString("Nombre");
+            final String Paterno = miBundle.getString("Paterno");
+            final String Materno = miBundle.getString("Materno");
+            final String Genero = miBundle.getString("Genero");
+            final String Telefono = miBundle.getString("Telefono");
+            final String Correo = miBundle.getString("Email");
+            final String Contra = miBundle.getString("Password");
+            final String Cedula = mTextInputCedula.getText().toString();
+            final String Categoria = mSpinner.getSelectedItem().toString();
+            if (!Nombre.isEmpty() && !Paterno.isEmpty() && !Telefono.isEmpty()&& !Correo.isEmpty()&& !Contra.isEmpty()&& !Cedula.isEmpty()&& !Categoria.isEmpty()) {
+                if (Contra.length() >= 6) {
+                    mDialog.show();
+                    register(Nombre, Paterno, Materno, Genero, Telefono, Correo, Contra, Cedula, Categoria);
+
+                } else {
+                    Toast.makeText(this, "La contraseña debe tener al menos 6 caracteres", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "Ingrese todos los campos", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    void register(final String Nombre,  String Paterno, String Materno, String Genero, String Telefono, final String Correo, String Contra, String Cedula,  String Categoria){
+        mAuthProvider.register(Correo,Contra).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                mDialog.hide();
+                if(task.isSuccessful()){
+                    String id= FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    Driver driver=new Driver(id,Nombre,Paterno,Materno,Genero,Telefono,Categoria,Cedula,Correo);
+                    Create(driver);
+                }else{
+                    Toast.makeText(ConfirmPassActivity2.this, "No se pudo registrar el usuario", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+    void Create(Driver driver){
+        mDriverProvider.create(driver).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    Toast.makeText(ConfirmPassActivity2.this, "El registro se realizo exitosamente", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(ConfirmPassActivity2.this, "No se pudo crear el conductor", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+
    public void onclick(View view) {
        showFileChooser();
     }

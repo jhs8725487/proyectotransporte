@@ -15,25 +15,26 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProyectoGrado"
         android:usesCleartextTraffic="true">
-        <activity android:name=".MapDriverActivity"></activity>
-        <activity android:name=".UpdateinfoActivity" />
+        <activity android:name=".Activitys.SelectOptionAuthActivity"
+            android:parentActivityName=".Activitys.MainActivity">
+        </activity>
+        <activity android:name=".drive.MapDriverActivity" />
+        <activity android:name=".Activitys.UpdateinfoActivity" />
         <activity android:name=".client.MapClientActivity" />
         <activity
             android:name=".drive.ConfirmPassActivity2"
             android:parentActivityName=".drive.Register2" />
         <activity
             android:name=".drive.Register2"
-            android:parentActivityName=".SelectOptionAuthActivity" />
+            android:parentActivityName=".Activitys.SelectOptionAuthActivity" />
         <activity
-            android:name=".LoginActivity"
-            android:parentActivityName=".SelectOptionAuthActivity" />
+            android:name=".Activitys.LoginActivity"
+            android:parentActivityName=".Activitys.SelectOptionAuthActivity" />
         <activity
             android:name=".client.RegisterActivity"
-            android:parentActivityName=".SelectOptionAuthActivity" />
-        <activity
-            android:name=".SelectOptionAuthActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity android:name=".MainActivity">
+            android:parentActivityName=".Activitys.SelectOptionAuthActivity" />
+
+        <activity android:name=".Activitys.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

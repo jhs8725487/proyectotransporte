@@ -38,9 +38,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.joel.proyectogrado.R;
-import com.joel.proyectogrado.UpdateinfoActivity;
+import com.joel.proyectogrado.Activitys.UpdateinfoActivity;
 
-import com.joel.proyectogrado.MainActivity;
+import com.joel.proyectogrado.Activitys.MainActivity;
 import include.MyToolbar;
 
 public class MapClientActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -241,6 +241,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     void logout() {
+        mAuthProvider.Logout();
         Intent intent = new Intent(MapClientActivity.this, MainActivity.class);
         startActivity(intent);
         finish();

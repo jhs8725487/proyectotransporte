@@ -1,4 +1,4 @@
-package com.joel.proyectogrado;
+package com.joel.proyectogrado.Activitys;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,12 +8,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.joel.proyectogrado.R;
 import com.joel.proyectogrado.client.RegisterActivity;
 import com.joel.proyectogrado.drive.Register2;
+
 import include.MyToolbar;
 
 public class SelectOptionAuthActivity extends AppCompatActivity {
-
     Button mButtonGoToLogin;
     Button mButtonGoToRegister;
     SharedPreferences mPref;
@@ -40,7 +41,6 @@ public class SelectOptionAuthActivity extends AppCompatActivity {
                 goToLogin();
             }
         });
-
     }
     public void goToLogin(){
         Intent intent=new Intent(SelectOptionAuthActivity.this, LoginActivity.class);

@@ -1,10 +1,11 @@
-package com.joel.proyectogrado;
+package com.joel.proyectogrado.Activitys;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -23,12 +24,16 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import com.joel.proyectogrado.R;
 import com.joel.proyectogrado.client.MapClientActivity;
+import com.joel.proyectogrado.client.RegisterActivity;
+import com.joel.proyectogrado.drive.MapDriverActivity;
+import com.joel.proyectogrado.drive.Register2;
+
 import dmax.dialog.SpotsDialog;
 import include.MyToolbar;
 
@@ -39,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
     Button mButtonLogin;
     AlertDialog mDialog;
     FirebaseAuth mAuth;
+    SharedPreferences mPref;
     DatabaseReference mDatabase;
 
 
@@ -49,7 +55,9 @@ public class LoginActivity extends AppCompatActivity {
         MyToolbar.show(this,"Login usuario",true);
 
         mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        mPref=getApplicationContext().getSharedPreferences("typeUser", MODE_PRIVATE);
+
 
         mTextInputEmail=findViewById(R.id.textInputEmail);
         mTextInputPassword=findViewById(R.id.textInputPassword);
@@ -80,9 +88,17 @@ public class LoginActivity extends AppCompatActivity {
                 mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        String selectedUser= mPref.getString("User","");
                         if (task.isSuccessful()) {
-                            Intent intent=new Intent(LoginActivity.this, MapClientActivity.class);
-                            startActivity(intent);
+                            if (selectedUser.equals("Activity/Client")) {
+                                Intent intent = new Intent(LoginActivity.this, MapClientActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                            }else{
+                                Intent intent = new Intent(LoginActivity.this, MapDriverActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                            }
                             //Toast.makeText(LoginActivity.this, "El login se realizo exitosamente", Toast.LENGTH_SHORT).show();
                         }
                         else {

@@ -1,8 +1,10 @@
-package com.joel.proyectogrado;
+package com.joel.proyectogrado.Activitys;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.joel.proyectogrado.R;
 
 import include.MyToolbar;
 
