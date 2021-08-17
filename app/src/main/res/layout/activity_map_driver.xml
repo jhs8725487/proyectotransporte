@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/ColorPrimary"
     tools:context=".drive.MapDriverActivity">
     <include layout="@layout/action_bar_toolbar"/>
     <LinearLayout
@@ -15,36 +16,18 @@
         android:id="@+id/btnEnruta"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="EN RUTA"
+        android:text="CONECTARSE"
         android:layout_gravity="top"
         android:layout_margin="10dp"
         android:textColor="@color/ColorWhite"
         android:background="@drawable/rounded_button"
-        android:backgroundTint="@color/ColorPrimary">
+        android:backgroundTint="@color/DarkColorPrimary">
 
     </Button>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:layout_marginTop="200dp"
-        android:orientation="vertical">
-    <Button
-        android:id="@+id/btnCortarRuta"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="CORTAR RUTA"
-        android:layout_gravity="bottom"
-        android:layout_margin="10dp"
-        android:textColor="@color/ColorWhite"
-        android:background="@drawable/rounded_button"
-        android:backgroundTint="@color/ColorPrimary">
-
-    </Button>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_marginTop="300dp"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
@@ -57,13 +40,13 @@
         android:layout_margin="10dp"
         android:textColor="@color/ColorWhite"
         android:background="@drawable/rounded_button"
-        android:backgroundTint="@color/ColorPrimary">
+        android:backgroundTint="@color/DarkColorPrimary">
 
     </Button>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="400dp"
+        android:layout_marginTop="300dp"
         android:layout_height="match_parent"
         android:orientation="vertical">
     <Button
@@ -75,7 +58,7 @@
         android:layout_margin="10dp"
         android:textColor="@color/ColorWhite"
         android:background="@drawable/rounded_button"
-        android:backgroundTint="@color/ColorPrimary">
+        android:backgroundTint="@color/DarkColorPrimary">
 
     </Button>
     </LinearLayout>

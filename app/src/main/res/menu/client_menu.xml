@@ -5,6 +5,9 @@
     <item android:id="@+id/action_logout"
         android:title="Cerrar sesion"
         app:showAsAction="never" />
+    <item android:id="@+id/action_ruta"
+        android:title="Ver Ruta"
+        app:showAsAction="never" />
     <item android:id="@+id/editar_informacion"
         android:title="Editar mi perfil"
         app:showAsAction="never" />

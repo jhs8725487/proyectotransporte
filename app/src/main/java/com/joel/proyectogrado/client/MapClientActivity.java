@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -23,6 +24,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -37,10 +40,15 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DatabaseError;
 import com.joel.proyectogrado.R;
 import com.joel.proyectogrado.Activitys.UpdateinfoActivity;
 
 import com.joel.proyectogrado.Activitys.MainActivity;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import include.MyToolbar;
 
 public class MapClientActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -56,23 +64,33 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
     private GeofireProvider mGeoFireProvider;
     private Button mButtonConnect;
     private boolean mIsconnect=false;
+    private List<Marker> mDriversMarkers=new ArrayList<>();
     private LatLng mCurrentLatLng;
+    private boolean mIsFirstTime=true;
+    private double mExtraOriginLat;
+    private double mExtraOriginLgn;
+    private double mExtraDestinationLat;
+    private double mExtraDestinationLng;
+    private LatLng  mOriginLatLng;
+    private LatLng mDestinationLatLng;
+
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
             for (Location location : locationResult.getLocations()) {
                 if (getApplicationContext() != null) {
-                    mCurrentLatLng=new LatLng(location.getLatitude(),location.getLongitude());
-                    if (mMarker != null){
+
+                    /*if (mMarker != null){
                         mMarker.remove();
 
-                    }
-                    mMarker=mMap.addMarker(new MarkerOptions().position(
+                    }*/
+                    mCurrentLatLng=new LatLng(location.getLatitude(),location.getLongitude());
+                   /* mMarker=mMap.addMarker(new MarkerOptions().position(
                             new LatLng(location.getLatitude(), location.getLongitude())
                     )
                             .title("Tu posicion")
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.iconuser))
-                    );
+                    );*/
                     //OBTENER LA LOCALIZACION DEL USUARIO EN TIEMPO REAL
                     mMap.moveCamera(CameraUpdateFactory.newCameraPosition(
                             new CameraPosition.Builder()
@@ -80,7 +98,11 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
                                     .zoom(16f)
                                     .build()
                     ));
-                    updateLocation();
+                   // updateLocation();
+                    if (mIsFirstTime){
+                        mIsFirstTime=false;
+                        getActiveDrivers();
+                    }
                 }
 
             }
@@ -96,6 +118,14 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
         mMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mMapFragment.getMapAsync(this);
+
+         double mExtraDestinationLat=-17.4902578;
+         double mExtraDestinationLng=-66.1770539;
+         double mExtraOriginLat=-17.3781992;
+         double mExtraOriginLgn=-66.1948988;
+         mOriginLatLng=new LatLng(mExtraOriginLat,mExtraOriginLgn);
+         mDestinationLatLng=new LatLng(mExtraDestinationLat,mExtraDestinationLng);
+
         mButtonConnect=findViewById(R.id.btnConnect);
         mAuthProvider=new AuthProvider();
         mGeoFireProvider=new GeofireProvider();
@@ -179,7 +209,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
                     mButtonConnect.setText("Desconectarse");
                     mIsconnect=true;
                     mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                    mMap.setMyLocationEnabled(true);
+                    mMap.setMyLocationEnabled(false);
                 } else {
                     ShowAlerDialogNOGPS();
                 }
@@ -189,13 +219,66 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         } else {
             if (gpsActive()) {
                 mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                mMap.setMyLocationEnabled(true);
+                mMap.setMyLocationEnabled(false);
             } else {
                 ShowAlerDialogNOGPS();
             }
         }
     }
+    public void getActiveDrivers(){
+        mGeoFireProvider.getActiveDrivers(mCurrentLatLng).addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+                //Añadimos los marcadores de los conductores que se conecten a la aplicacion
+                for (Marker marker: mDriversMarkers){
+                    if (marker.getTag()!=null){
+                        if (marker.getTag().equals(key)){
+                            return;
+                        }
+                    }
+                }
+                LatLng driverLatLng=new LatLng(location.latitude, location.longitude);
+                Marker marker=mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Conductor disponible").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_car)));
+                marker.setTag(key);
+                mDriversMarkers.add(marker);
+            }
 
+            @Override
+            public void onKeyExited(String key) {
+                for (Marker marker: mDriversMarkers){
+                    if (marker.getTag()!=null){
+                        if (marker.getTag().equals(key)){
+                            marker.remove();
+                            mDriversMarkers.remove(marker);
+                            return;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+                //Actualizar la posicion de cada conductor
+                for (Marker marker: mDriversMarkers){
+                    if (marker.getTag()!=null){
+                        if (marker.getTag().equals(key)){
+                            marker.setPosition(new LatLng(location.latitude,location.longitude));
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
+            }
+        });
+    }
     private void CheckLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -231,10 +314,14 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
             logout();
         } else if (item.getItemId() == R.id.editar_informacion) {
             Update();
+        }else if(item.getItemId()== R.id.action_ruta){
+            VerRuta();
         }
         return super.onOptionsItemSelected(item);
     }
+    void VerRuta(){
 
+    }
     void Update() {
         Intent intent = new Intent(MapClientActivity.this, UpdateinfoActivity.class);
         startActivity(intent);
@@ -255,15 +342,27 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.getUiSettings().setZoomControlsEnabled(true);
+
+        mMap.addMarker(new MarkerOptions().position(mOriginLatLng).title("Origen").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_pin_red)));
+        mMap.addMarker(new MarkerOptions().position(mDestinationLatLng).title("Destino").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_pin_blue)));
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
+                new CameraPosition.Builder()
+                .target(mOriginLatLng)
+                .zoom(14f)
+                .build()
+        ));
+
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+        //mMap.setMyLocationEnabled(true);
         mLocationRequest=new LocationRequest();
         mLocationRequest.setInterval(1000);
         mLocationRequest.setFastestInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setSmallestDisplacement(5);
-        StartLocation();
+
 
     }
 }

@@ -7,6 +7,9 @@
     android:fitsSystemWindows="true"
     tools:context=".Activitys.LoginActivity">
     <include layout="@layout/action_bar_toolbar"></include>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -98,5 +101,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
+    </ScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
