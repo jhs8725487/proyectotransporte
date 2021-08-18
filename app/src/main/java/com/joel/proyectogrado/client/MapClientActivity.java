@@ -13,12 +13,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,19 +39,33 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.JointType;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.SquareCap;
 import com.google.firebase.database.DatabaseError;
+import com.google.gson.JsonObject;
 import com.joel.proyectogrado.R;
 import com.joel.proyectogrado.Activitys.UpdateinfoActivity;
 
 import com.joel.proyectogrado.Activitys.MainActivity;
+import com.joel.proyectogrado.providers.GoogleApiProvider;
+import com.joel.proyectogrado.utils.DecodePoints;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import include.MyToolbar;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MapClientActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -73,6 +89,13 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
     private double mExtraDestinationLng;
     private LatLng  mOriginLatLng;
     private LatLng mDestinationLatLng;
+    private LatLng  mOriginLatLng2;
+    private LatLng mDestinationLatLng2;
+    private LatLng  mOriginLatLng3;
+    private LatLng mDestinationLatLng3;
+    private GoogleApiProvider mGoogleApiProvider;
+    private List<LatLng> mPolylineList;
+    private PolylineOptions mPolylineOptions;
 
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
@@ -119,12 +142,38 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         mMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mMapFragment.getMapAsync(this);
 
-         double mExtraDestinationLat=-17.4902578;
+         /*double mExtraDestinationLat=-17.4902578;
          double mExtraDestinationLng=-66.1770539;
          double mExtraOriginLat=-17.3781992;
-         double mExtraOriginLgn=-66.1948988;
-         mOriginLatLng=new LatLng(mExtraOriginLat,mExtraOriginLgn);
-         mDestinationLatLng=new LatLng(mExtraDestinationLat,mExtraDestinationLng);
+         double mExtraOriginLgn=-66.1948988;*/
+
+        double mExtraDestinationLat2=-17.4902578;
+        double mExtraDestinationLng2=-66.1770539;
+        double mExtraOriginLat2=-17.4861689;
+        double mExtraOriginLgn2=-66.17253721;
+
+        double mExtraDestinationLat=-17.4861689;
+        double mExtraDestinationLng=-66.17253721;
+        double mExtraOriginLat=-17.4135865;
+        double mExtraOriginLgn=-66.156731219;
+
+
+
+        double mExtraDestinationLat3=-17.4102568;
+        double mExtraDestinationLng3=-66.150937619;
+        double mExtraOriginLat3=-17.4135865;
+        double mExtraOriginLgn3=-66.156731219;
+
+        mOriginLatLng=new LatLng(mExtraOriginLat,mExtraOriginLgn);
+        mDestinationLatLng=new LatLng(mExtraDestinationLat,mExtraDestinationLng);
+
+        mOriginLatLng2=new LatLng(mExtraOriginLat2,mExtraOriginLgn2);
+        mDestinationLatLng2=new LatLng(mExtraDestinationLat2,mExtraDestinationLng2);
+
+        mOriginLatLng3=new LatLng(mExtraOriginLat3,mExtraOriginLgn3);
+        mDestinationLatLng3=new LatLng(mExtraDestinationLat3,mExtraDestinationLng3);
+
+        mGoogleApiProvider = new GoogleApiProvider(MapClientActivity.this);
 
         mButtonConnect=findViewById(R.id.btnConnect);
         mAuthProvider=new AuthProvider();
@@ -140,7 +189,35 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
             }
         });
     }
+private void drawRoute(LatLng Origen, LatLng Destino){
+        mGoogleApiProvider.getDirections(Origen,Destino).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                 try {
+                     JSONObject jsonObject=new JSONObject(response.body());
+                     JSONArray jsonArray=  jsonObject.getJSONArray("routes");
+                     JSONObject route= jsonArray.getJSONObject(0);
+                     JSONObject polylines=route.getJSONObject("overview_polyline");
+                     String points=polylines.getString("points");
+                     mPolylineList= DecodePoints.decodePoly(points);
+                     mPolylineOptions=new PolylineOptions();
+                     mPolylineOptions.color(Color.DKGRAY);
+                     mPolylineOptions.width(8f);
+                     mPolylineOptions.startCap(new SquareCap());
+                     mPolylineOptions.jointType(JointType.ROUND);
+                     mPolylineOptions.addAll(mPolylineList);
+                     mMap.addPolyline(mPolylineOptions);
+                 }catch (Exception e){
+                     Log.d("error", "error encontrado"+e.getMessage());
+                 }
+            }
 
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+            }
+        });
+}
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -345,13 +422,18 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
 
         mMap.addMarker(new MarkerOptions().position(mOriginLatLng).title("Origen").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_pin_red)));
         mMap.addMarker(new MarkerOptions().position(mDestinationLatLng).title("Destino").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_pin_blue)));
+
+        mMap.addMarker(new MarkerOptions().position(mOriginLatLng2).title("Origen").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_pin_red)));
+        mMap.addMarker(new MarkerOptions().position(mDestinationLatLng2).title("Destino").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_pin_blue)));
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
                 new CameraPosition.Builder()
                 .target(mOriginLatLng)
                 .zoom(14f)
                 .build()
         ));
-
+        drawRoute(mOriginLatLng,mDestinationLatLng);
+        drawRoute(mOriginLatLng2,mDestinationLatLng2);
+        drawRoute(mOriginLatLng3,mDestinationLatLng3);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;

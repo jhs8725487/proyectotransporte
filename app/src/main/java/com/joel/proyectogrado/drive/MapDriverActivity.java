@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -54,6 +55,8 @@ public class MapDriverActivity extends AppCompatActivity {
     private final static int LOCATION_REQUEST_CODE = 1;
     private final static int SETTINGS_REQUEST_CODE = 2;
     private boolean mIsconnect=false;
+    public static final String nombres="Nombre";
+    TextView cajaBienvenido;
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
@@ -85,6 +88,9 @@ public class MapDriverActivity extends AppCompatActivity {
         mLocationRequest.setFastestInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setSmallestDisplacement(5);
+        cajaBienvenido=(TextView)findViewById(R.id.txtBienvenido);
+        String usuario=getIntent().getStringExtra("names");
+        cajaBienvenido.setText("BIENVENIDO "+usuario);
         mButtonConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

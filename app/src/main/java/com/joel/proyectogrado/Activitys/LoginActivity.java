@@ -28,11 +28,15 @@ import com.google.firebase.database.DatabaseReference;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gson.JsonObject;
 import com.joel.proyectogrado.R;
 import com.joel.proyectogrado.client.MapClientActivity;
 import com.joel.proyectogrado.client.RegisterActivity;
 import com.joel.proyectogrado.drive.MapDriverActivity;
 import com.joel.proyectogrado.drive.Register2;
+import com.joel.proyectogrado.models.Client;
+
+import org.json.JSONArray;
 
 import dmax.dialog.SpotsDialog;
 import include.MyToolbar;
@@ -57,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         mPref=getApplicationContext().getSharedPreferences("typeUser", MODE_PRIVATE);
-
+        RequestQueue queue=Volley.newRequestQueue(this);
 
         mTextInputEmail=findViewById(R.id.textInputEmail);
         mTextInputPassword=findViewById(R.id.textInputPassword);
@@ -67,9 +71,9 @@ public class LoginActivity extends AppCompatActivity {
         mButtonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // validarusuario("http://192.168.0.11//ejemploBDRemota/validar_usuario.php");
+               validarusuario("http://192.168.0.11//ejemploBDRemota/validar_usuario.php");
                // gotoMap();
-                login();
+                //login();
             }
         });
 

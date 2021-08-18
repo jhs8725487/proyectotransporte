@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.joel.proyectogrado.R;
+import com.joel.proyectogrado.SessionFragment;
 import com.joel.proyectogrado.client.RegisterActivity;
 import com.joel.proyectogrado.drive.Register2;
 
@@ -43,7 +44,8 @@ public class SelectOptionAuthActivity extends AppCompatActivity {
         });
     }
     public void goToLogin(){
-        Intent intent=new Intent(SelectOptionAuthActivity.this, LoginActivity.class);
+        //Intent intent=new Intent(SelectOptionAuthActivity.this, LoginActivity.class);
+        Intent intent=new Intent(SelectOptionAuthActivity.this, SessionFragment.class);
         startActivity(intent);
     }
     public void goToRegister(){
