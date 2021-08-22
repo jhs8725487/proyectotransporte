@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.joel.proyectogrado.R;
@@ -38,6 +39,7 @@ public class Register2 extends AppCompatActivity {
     SharedPreferences mPref;
     ClientProvider mClientProvider;
     DriverProvider mDriverProvider;
+    String selectedUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,7 @@ public class Register2 extends AppCompatActivity {
         mTextInputEmail=(TextInputEditText) findViewById(R.id.textInputEmail);
         mTextInputPassword=(TextInputEditText)findViewById(R.id.textInputPassword);
         mButonRegister2=(Button) findViewById(R.id.btnGoToConfirm);
+        selectedUser= mPref.getString("User","");
 
         mButonRegister2=(Button) findViewById(R.id.btnGoToConfirm);
         mButonRegister2.setOnClickListener(new View.OnClickListener() {
@@ -68,9 +71,13 @@ public class Register2 extends AppCompatActivity {
             public void onClick(View v) {
 
                 goToConfirm();
+                //prueba();
             }
         });
     }
+    /*void prueba(){
+        Toast.makeText(this, selectedUser, Toast.LENGTH_SHORT).show();
+    }*/
     public void goToConfirm(){
         if (rbtFemenino.isChecked()) {
             driver = new Driver(mTextInputName.getText().toString(), mTextInputLastname.getText().toString(),mTextInputLastname2.getText().toString(), "F", mTextInputPhone.getText().toString(), mTextInputEmail.getText().toString(), mTextInputPassword.getText().toString());

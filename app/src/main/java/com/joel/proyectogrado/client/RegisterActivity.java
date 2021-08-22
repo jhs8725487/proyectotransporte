@@ -1,6 +1,5 @@
 package com.joel.proyectogrado.client;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
@@ -8,21 +7,25 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.AuthResult;
 
-import com.joel.proyectogrado.models.Client;
 import com.joel.proyectogrado.providers.AuthProvider;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.joel.proyectogrado.R;
 import com.joel.proyectogrado.providers.ClientProvider;
 import com.joel.proyectogrado.providers.DriverProvider;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import dmax.dialog.SpotsDialog;
 import include.MyToolbar;
@@ -33,14 +36,14 @@ public class RegisterActivity extends AppCompatActivity {
     //vistas
     Button mButonRegister;
     TextInputEditText mTextInputName;
-    //TextInputEditText mTextInputPhone;
-    //TextInputEditText mTextInputLastname;
-    //RadioButton  rbtMasculino;
-   // RadioButton rbtFemenino;
+    TextInputEditText mTextInputPhone;
+    TextInputEditText mTextInputLastname;
+    TextInputEditText mTextInputLastname2;
+    TextInputEditText mTextInputCedula;
+    RadioButton rbtMasculino;
+    RadioButton rbtFemenino;
     TextInputEditText mTextInputEmail;
-    TextInputEditText mTextInputPassword;
     AlertDialog mDialog;
-    TextInputEditText mTextInputConfirmPassword;
     AuthProvider mAuthProvider;
     SharedPreferences mPref;
     ClientProvider mClientProvider;
@@ -62,30 +65,33 @@ public class RegisterActivity extends AppCompatActivity {
 
         mButonRegister=(Button) findViewById(R.id.btnGoToRegister);
         mTextInputEmail=(TextInputEditText) findViewById(R.id.textInputEmail);
-        mTextInputPassword=(TextInputEditText)findViewById(R.id.textInputPassword);
-        //mTextInputConfirmPassword=(TextInputEditText)findViewById(R.id.textInputConfirmPassword);
         mTextInputName=(TextInputEditText)findViewById(R.id.textInputName);
-       // mTextInputLastname=(TextInputEditText)findViewById(R.id.textInputLastname);
-       // mTextInputPhone=(TextInputEditText)findViewById(R.id.textInputPhone);
-       // rbtMasculino=(RadioButton)findViewById(R.id.rbtMasculino);
-        //rbtFemenino=(RadioButton)findViewById(R.id.rbtFemenino);
-        //mDialog= new SpotsDialog.Builder().setContext(RegisterActivity.this).setMessage("Espere un momento").build();
+        mTextInputLastname=(TextInputEditText)findViewById(R.id.textInputLastName);
+        mTextInputLastname2=(TextInputEditText)findViewById(R.id.textInputLastName2);
+        mTextInputCedula=(TextInputEditText)findViewById(R.id.textInputCedula);
+        mTextInputPhone=(TextInputEditText)findViewById(R.id.textInputPhone);
+        rbtMasculino=(RadioButton)findViewById(R.id.rbtMasculino);
+        rbtFemenino=(RadioButton)findViewById(R.id.rbtFemenino);
+        mDialog= new SpotsDialog.Builder().setContext(RegisterActivity.this).setMessage("Espere un momento").build();
 
 
         mButonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //if(mTextInputPassword.equals(mTextInputConfirmPassword)) {
-                   // ejecutarServicio("http://192.168.0.18//ejemploBDRemota/insertar_usuario.php");
-                    //ejecutarServicio("http://192.168.0.11//ejemploBDRemota/insertar_usuario.php");
-                    clickRegister();
+                    ejecutarServicio("http://192.168.0.15//ejemploBDRemota/insertar_usuario.php");
+                   // clickRegister();
+                    //prueba();
                 //}else{
                   //  Toast.makeText(RegisterActivity.this, "Las contraseñas no coiciden", Toast.LENGTH_SHORT).show();
                 //}
             }
         });
     }
-    void clickRegister(){
+    /*void prueba(){
+        Toast.makeText(this, selectedUser, Toast.LENGTH_SHORT).show();
+    }*/
+    /*void clickRegister(){
         final String Name=mTextInputName.getText().toString();
         final String Email=mTextInputEmail.getText().toString();
         final String Password=mTextInputPassword.getText().toString();
@@ -128,7 +134,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
-    /*public void SaveUSer(String id,String Name, String Email){
+    public void SaveUSer(String id,String Name, String Email){
         String SelectedUser= mPref.getString("User","");
         if (SelectedUser.equals("Activity/Client")){
             Client user=new Client();
@@ -146,7 +152,7 @@ public class RegisterActivity extends AppCompatActivity {
             });  //con push voy a guardar su id
         }
     }*/
-   /* private void ejecutarServicio(String URL) {
+    private void ejecutarServicio(String URL) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
 
             public void onResponse(String response) {
@@ -162,20 +168,24 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> parametros = new HashMap<String, String>();
+                String selectedUser= mPref.getString("User","");
                 parametros.put("Nombre", mTextInputName.getText().toString());
-                parametros.put("Apellidos", mTextInputLastname.getText().toString());
+                parametros.put("ApellidoPaterno", mTextInputLastname.getText().toString());
+                parametros.put("ApellidoMaterno", mTextInputLastname2.getText().toString());
                 if (rbtMasculino.isChecked()) {
                     parametros.put("Sexo", "M");
                 }else{
                     parametros.put("Sexo","F");
                 }
                 parametros.put("Telefono", mTextInputPhone.getText().toString());
+                parametros.put("Cedula", mTextInputCedula.getText().toString());
                 parametros.put("Correo", mTextInputEmail.getText().toString());
-                parametros.put("usu_password", mTextInputPassword.getText().toString());
+                //parametros.put("usu_password", mTextInputPassword.getText().toString());
+                parametros.put("Rol",selectedUser);
                 return parametros;
             }
         };
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
-    }*/
+    }
 }

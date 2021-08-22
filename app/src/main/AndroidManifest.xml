@@ -15,9 +15,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProyectoGrado"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Activitys.SelectOptionAuthActivity"
-            android:parentActivityName=".Activitys.MainActivity">
-        </activity>
+        <activity android:name=".UpdateClientActivity"></activity>
+        <activity
+            android:name=".Activitys.LoginActivity2"
+            android:parentActivityName=".Activitys.SelectOptionAuthActivity" />
+        <activity
+            android:name=".Activitys.SelectOptionAuthActivity"
+            android:parentActivityName=".Activitys.MainActivity" />
         <activity android:name=".drive.MapDriverActivity" />
         <activity android:name=".Activitys.UpdateinfoActivity" />
         <activity android:name=".client.MapClientActivity" />
@@ -33,7 +37,6 @@
         <activity
             android:name=".client.RegisterActivity"
             android:parentActivityName=".Activitys.SelectOptionAuthActivity" />
-
         <activity android:name=".Activitys.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

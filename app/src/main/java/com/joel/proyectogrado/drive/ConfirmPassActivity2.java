@@ -31,8 +31,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.joel.proyectogrado.R;
-import com.joel.proyectogrado.client.RegisterActivity;
-import com.joel.proyectogrado.models.Client;
 import com.joel.proyectogrado.models.Driver;
 import com.joel.proyectogrado.providers.AuthProvider;
 import com.joel.proyectogrado.providers.ClientProvider;

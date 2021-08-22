@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 goToSelectAuth();
-                editor.putString("User", "Activity/Client");
+                editor.putString("User", "Cliente");
                 editor.apply();
             }
         });
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 goToSelectAuth();
-                editor.putString("User", "Driver");
+                editor.putString("User", "Conductor");
                 editor.apply();
             }
         });

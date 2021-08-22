@@ -11,6 +11,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -25,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQueryEventListener;
@@ -53,6 +55,8 @@ import com.joel.proyectogrado.R;
 import com.joel.proyectogrado.Activitys.UpdateinfoActivity;
 
 import com.joel.proyectogrado.Activitys.MainActivity;
+import com.joel.proyectogrado.UpdateDriveActivity;
+import com.joel.proyectogrado.drive.MapDriverActivity;
 import com.joel.proyectogrado.providers.GoogleApiProvider;
 import com.joel.proyectogrado.utils.DecodePoints;
 
@@ -80,6 +84,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
     private GeofireProvider mGeoFireProvider;
     private Button mButtonConnect;
     private boolean mIsconnect=false;
+    public static final String nombres="names";
     private List<Marker> mDriversMarkers=new ArrayList<>();
     private LatLng mCurrentLatLng;
     private boolean mIsFirstTime=true;
@@ -96,7 +101,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
     private GoogleApiProvider mGoogleApiProvider;
     private List<LatLng> mPolylineList;
     private PolylineOptions mPolylineOptions;
-
+    SharedPreferences mPref;
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
@@ -141,7 +146,8 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
         mMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mMapFragment.getMapAsync(this);
-
+        mPref= getSharedPreferences("typeUser",Context.MODE_PRIVATE);
+        String usuario=getIntent().getStringExtra("names");
          /*double mExtraDestinationLat=-17.4902578;
          double mExtraDestinationLng=-66.1770539;
          double mExtraOriginLat=-17.3781992;
@@ -400,6 +406,10 @@ private void drawRoute(LatLng Origen, LatLng Destino){
 
     }
     void Update() {
+        String usuario=getIntent().getStringExtra("names");
+        SharedPreferences.Editor editor =mPref.edit();
+        editor.putString("Usuario",usuario);
+        editor.commit();
         Intent intent = new Intent(MapClientActivity.this, UpdateinfoActivity.class);
         startActivity(intent);
     }

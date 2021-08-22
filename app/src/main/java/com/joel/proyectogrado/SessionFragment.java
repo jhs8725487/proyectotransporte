@@ -19,11 +19,9 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.joel.proyectogrado.Activitys.MainActivity;
+import com.joel.proyectogrado.client.MapClientActivity;
 import com.joel.proyectogrado.drive.MapDriverActivity;
-import com.joel.proyectogrado.models.Client;
+import com.joel.proyectogrado.models.Usuario;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,11 +34,12 @@ public class SessionFragment extends Fragment implements Response.Listener<JSONO
     TextInputEditText mTextInputEmail;
     TextInputEditText mTextInputPassword;
     Button mButtonLogin;
+    String selectedUser;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // Inflate the layout for this fragment;
 
         //return inflater.inflate(R.layout.fragment_session, container, false);
         View vista=inflater.inflate(R.layout.fragment_session,container,false);
@@ -48,10 +47,14 @@ public class SessionFragment extends Fragment implements Response.Listener<JSONO
         mTextInputPassword=(TextInputEditText) vista.findViewById(R.id.textInputPassword);
         mButtonLogin=(Button) vista.findViewById(R.id.btnLogin);
         rq= Volley.newRequestQueue(getContext());
+        if (getArguments()!=null){
+            selectedUser=getArguments().getString("Rol","");
+        }
         mButtonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                iniciarSession();
+                selectedUser=getArguments().getString("Rol","");
+                iniciarSession(selectedUser);
             }
         });
         return vista;
@@ -64,25 +67,40 @@ public class SessionFragment extends Fragment implements Response.Listener<JSONO
 
     @Override
     public void onResponse(JSONObject response) {
-        Client client=new Client();
+        Usuario user=new Usuario();
         Toast.makeText(getContext(), "Se ha encontrado al usuario "+mTextInputEmail.getText().toString(), Toast.LENGTH_SHORT).show();
 
         JSONArray jsonArray=response.optJSONArray("datos");
         JSONObject jsonObject=null;
         try {
             jsonObject=jsonArray.getJSONObject(0);
-            client.setCorreo(jsonObject.optString("user"));
-            client.setContra(jsonObject.optString("pwd"));
-            client.setNombre(jsonObject.optString("name"));
+            user.setCorreo(jsonObject.optString("usu_usuario"));
+            user.setContra(jsonObject.optString("usu_password"));
+            user.setNombre(jsonObject.optString("Nombre"));
+            user.setId(jsonObject.optString("idUsuario"));
+            user.setRol(jsonObject.optString("Rol"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Intent intent=new Intent(getContext(), MapDriverActivity.class);
-        intent.putExtra(MapDriverActivity.nombres, client.getNombre());
-        startActivity(intent);
+        String Rol =user.getRol();
+        //oast.makeText(getContext(), user.getRol(), Toast.LENGTH_SHORT).show();
+        if (Rol.equals(selectedUser)) {
+            if (selectedUser.equals("Cliente")) {
+                Intent intent = new Intent(getContext(), MapClientActivity.class);
+                intent.putExtra(MapClientActivity.nombres, user.getId());
+                startActivity(intent);
+
+            } else if (selectedUser.equals("Conductor")) {
+                Intent intent = new Intent(getContext(), MapDriverActivity.class);
+                intent.putExtra(MapDriverActivity.nombres, user.getId());
+                startActivity(intent);
+            }
+        }else {
+            Toast.makeText(getContext(), "Tiene que elejir la opcion soy " + Rol, Toast.LENGTH_SHORT).show();
+        }
     }
-    private void iniciarSession(){
-        String url="http://192.168.0.11//ejemploBDRemota/sesion.php?Correo="+mTextInputEmail.getText().toString()+"&usu_password="+mTextInputPassword.getText().toString();
+    public void iniciarSession(String selectedUser){
+        String url="http://192.168.0.15//ejemploBDRemota/sesion.php?usu_usuario="+mTextInputEmail.getText().toString()+"&usu_password="+mTextInputPassword.getText().toString()+"&Rol="+selectedUser;
         jrq=new JsonObjectRequest(Request.Method.GET,url,null,this,this);
         rq.add(jrq);
     }

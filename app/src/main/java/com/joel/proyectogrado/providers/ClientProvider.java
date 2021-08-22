@@ -1,5 +1,5 @@
 package com.joel.proyectogrado.providers;
-import com.joel.proyectogrado.models.Client;
+import com.joel.proyectogrado.models.Usuario;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -13,7 +13,7 @@ public class ClientProvider {
     public ClientProvider(){
         mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Clients");
     }
-    public Task<Void> create(Client client){
+    public Task<Void> create(Usuario client){
         Map<String, Object> map=new HashMap<>();
         map.put("name", client.getNombre());
         map.put("email",client.getCorreo());

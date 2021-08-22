@@ -29,6 +29,64 @@
         android:layout_height="match_parent"
         android:layout_marginTop="200dp"
         android:orientation="vertical">
+        <TextView
+            android:id="@+id/txtLatitud"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:inputType="numberDecimal"
+            android:text="LATITUD"
+            android:layout_gravity="top"
+            android:layout_margin="10dp">
+
+        </TextView>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="250dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/txtLongitud"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:inputType="numberDecimal"
+            android:textSize="20dp"
+            android:text="LATITUD"
+            android:layout_gravity="top"
+            android:layout_margin="10dp">
+
+        </TextView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="300dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/txtdireccion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:inputType="numberDecimal"
+            android:textSize="20dp"
+            android:text="DIRECCION"
+            android:layout_gravity="top"
+            android:layout_margin="10dp">
+
+        </TextView>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="350dp"
+        android:orientation="vertical">
     <Button
         android:id="@+id/btnEnruta"
         android:layout_width="match_parent"
@@ -42,9 +100,10 @@
 
     </Button>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="300dp"
+        android:layout_marginTop="450dp"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
@@ -63,7 +122,7 @@
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="400dp"
+        android:layout_marginTop="550dp"
         android:layout_height="match_parent"
         android:orientation="vertical">
     <Button

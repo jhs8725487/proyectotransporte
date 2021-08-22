@@ -1,6 +1,6 @@
 package com.joel.proyectogrado.models;
 
-public class Client {
+public class Usuario {
 
 
     String id;
@@ -9,17 +9,19 @@ public class Client {
     String Genero;
     String Telefono;
     String Correo;
+    String Rol;
     String Contra;
 
-    public Client() {
+    public Usuario() {
     }
 
-    public Client(String id, String nombre, String correo) {
+    public Usuario(String id, String nombre, String correo, String Rol) {
         this.id=id;
         this.Nombre = nombre;
         this.Correo = correo;
+        this.Rol=Rol;
     }
-    public Client(String nombre, String apellidos, String genero, String telefono, String correo, String contra) {
+    public Usuario(String nombre, String apellidos, String genero, String telefono, String correo, String contra) {
         this.Nombre = nombre;
         this.Apellidos = apellidos;
         this.Genero = genero;
@@ -80,6 +82,13 @@ public class Client {
 
     public void setContra(String contra) {
         Contra = contra;
+    }
+    public String getRol() {
+        return Rol;
+    }
+
+    public void setRol(String rol) {
+        this.Rol = rol;
     }
 
 }

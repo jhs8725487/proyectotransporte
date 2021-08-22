@@ -10,7 +10,10 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -24,6 +27,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -41,6 +51,13 @@ import com.joel.proyectogrado.R;
 import com.joel.proyectogrado.client.AuthProvider;
 import com.joel.proyectogrado.client.GeofireProvider;
 import com.joel.proyectogrado.client.MapClientActivity;
+import com.joel.proyectogrado.client.RegisterActivity;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import include.MyToolbar;
 
@@ -51,12 +68,17 @@ public class MapDriverActivity extends AppCompatActivity {
     private FusedLocationProviderClient mFusedLocation;
     private LocationRequest mLocationRequest;
     private Marker mMarker;
+    SharedPreferences mPref;
     private Button mButtonConnect;
     private final static int LOCATION_REQUEST_CODE = 1;
     private final static int SETTINGS_REQUEST_CODE = 2;
     private boolean mIsconnect=false;
-    public static final String nombres="Nombre";
+    public static final String nombres="names";
     TextView cajaBienvenido;
+    TextView tLatitud;
+    TextView tLongitud;
+    TextView tDireccion;
+    String mlatitud, mlongitud;
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
@@ -64,6 +86,12 @@ public class MapDriverActivity extends AppCompatActivity {
                 if (getApplicationContext() != null) {
                     //Localizacion del conductor en tiempo real
                     mCurrentLatLng=new LatLng(location.getLatitude(),location.getLongitude());
+                    mlatitud=String.valueOf(location.getLatitude());
+                    mlongitud=String.valueOf(location.getLongitude());
+                    tLatitud.setText("Latitud "+mlatitud);
+                    tLongitud.setText("Longitud "+mlongitud);
+                    setLocation(location);
+                    prueba();
                     if (mMarker != null){
                         mMarker.remove();
 
@@ -89,6 +117,11 @@ public class MapDriverActivity extends AppCompatActivity {
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setSmallestDisplacement(5);
         cajaBienvenido=(TextView)findViewById(R.id.txtBienvenido);
+        tLatitud=(TextView) findViewById(R.id.txtLatitud);
+        tLongitud=(TextView) findViewById(R.id.txtLongitud);
+        tDireccion=(TextView) findViewById(R.id.txtdireccion);
+        //mPref=getApplicationContext().getSharedPreferences("typeUser", MODE_PRIVATE);
+        mPref= getSharedPreferences("typeUser",Context.MODE_PRIVATE);
         String usuario=getIntent().getStringExtra("names");
         cajaBienvenido.setText("BIENVENIDO "+usuario);
         mButtonConnect.setOnClickListener(new View.OnClickListener() {
@@ -101,6 +134,9 @@ public class MapDriverActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+    public void prueba(){
+        ejecutarServicio("http://192.168.0.15//ejemploBDRemota/insertargps.php");
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -144,6 +180,10 @@ public class MapDriverActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
     void Update() {
+        String usuario=getIntent().getStringExtra("names");
+        SharedPreferences.Editor editor =mPref.edit();
+        editor.putString("Usuario",usuario);
+        editor.commit();
         Intent intent = new Intent(MapDriverActivity.this, UpdateinfoActivity.class);
         startActivity(intent);
     }
@@ -214,7 +254,21 @@ public class MapDriverActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+    public void setLocation(Location loc){
+        if (loc.getLatitude()!=0.0 && loc.getLongitude()!=0.0){
+            try {
+                Geocoder geocoder=new Geocoder(this, Locale.getDefault());
+                List<Address> list=geocoder.getFromLocation(loc.getLatitude(),loc.getLongitude(),1);
+                if (!list.isEmpty()){
+                    Address DirCalle=list.get(0);
+                    tDireccion.setText(DirCalle.getAddressLine(0));
+                }
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }
 
+}
     private void  disconect(){
         if (mFusedLocation!=null){
             mButtonConnect.setText("Conectarse");
@@ -226,5 +280,32 @@ public class MapDriverActivity extends AppCompatActivity {
         }else{
             Toast.makeText(this, "No se puede desconectar", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void ejecutarServicio(String URL) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+
+            public void onResponse(String response) {
+                Toast.makeText(MapDriverActivity.this, "OPERACION EXITOSA", Toast.LENGTH_SHORT).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(MapDriverActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+
+                parametros.put("Latitud", tLatitud.getText().toString().trim());
+                parametros.put("Longitud", tLongitud.getText().toString().trim());
+                parametros.put("Direccion", tDireccion.getText().toString().trim());
+                return parametros;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 }

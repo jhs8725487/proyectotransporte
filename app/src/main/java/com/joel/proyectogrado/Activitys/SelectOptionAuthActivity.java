@@ -1,6 +1,9 @@
 package com.joel.proyectogrado.Activitys;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -44,16 +47,30 @@ public class SelectOptionAuthActivity extends AppCompatActivity {
         });
     }
     public void goToLogin(){
-        //Intent intent=new Intent(SelectOptionAuthActivity.this, LoginActivity.class);
-        Intent intent=new Intent(SelectOptionAuthActivity.this, SessionFragment.class);
+        SharedPreferences.Editor editor=mPref.edit();
+        String selectedUser=mPref.getString("User","");
+        if (selectedUser.equals("Cliente")) {
+            editor.putString("User", "Cliente");
+            editor.apply();
+        }else{
+            editor.putString("User","Conductor");
+            editor.apply();
+        }
+        Intent intent = new Intent(SelectOptionAuthActivity.this, LoginActivity2.class);
         startActivity(intent);
     }
     public void goToRegister(){
+        SharedPreferences.Editor editor=mPref.edit();
         String selectedUser= mPref.getString("User","");
-        if (selectedUser.equals("Activity/Client")) {
-            Intent intent = new Intent(SelectOptionAuthActivity.this, RegisterActivity.class);
+        if (selectedUser.equals("Cliente")) {
+            //Intent intent = new Intent(SelectOptionAuthActivity.this, RegisterActivity.class);
+            editor.putString("User", "Cliente");
+            editor.apply();
+            Intent intent =new Intent(SelectOptionAuthActivity.this,RegisterActivity.class);
             startActivity(intent);
         }else{
+            editor.putString("User","Conductor");
+            editor.apply();
             Intent intent = new Intent(SelectOptionAuthActivity.this, Register2.class);
             startActivity(intent);
         }
