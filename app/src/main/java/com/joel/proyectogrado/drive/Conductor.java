@@ -1,39 +1,44 @@
 package com.joel.proyectogrado.drive;
 
+import android.os.health.TimerStat;
+
+import java.util.Date;
+
 public class Conductor {
 
 
-    String categoria;
-    String cedula;
-    String Contra;
+    String Categoria;
+    String Expedido;
+    String FechaNacimiento;
 
-    public Conductor(String categoria, String cedula, String contra) {
-        this.categoria = categoria;
-        this.cedula = cedula;
-        this.Contra = contra;
+    public Conductor(String Categoria, String Expedido ,String FechaNacimiento) {
+        this.Categoria = Categoria;
+        this.Expedido = Expedido;
+        this.FechaNacimiento = FechaNacimiento;
     }
     public String getCategoria() {
-        return categoria;
+        return Categoria;
     }
 
     public void setCategoria(String categoria) {
-        this.categoria = categoria;
+        Categoria = categoria;
     }
 
-    public String getcedula() {
-        return cedula;
+    public String getExpedido() {
+        return Expedido;
     }
 
-    public void setcedula(String cedula) {
-        this.cedula = cedula;
+    public void setExpedido(String expedido) {
+        Expedido = expedido;
     }
 
-    public String getContra() {
-        return Contra;
+    public String getFechaNacimiento() {
+
+        return FechaNacimiento;
     }
 
-    public void setContra(String contra) {
-        this.Contra = contra;
+    public void setFechaNacimiento(String fechaNacimiento) {
+        FechaNacimiento = fechaNacimiento;
     }
 
 }

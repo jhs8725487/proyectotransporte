@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProyectoGrado"
         android:usesCleartextTraffic="true">
-        <activity android:name=".UpdateClientActivity"></activity>
+        <activity android:name=".EditarDriveActivity"></activity>
+        <activity android:name=".UpdateClientActivity" />
         <activity
             android:name=".Activitys.LoginActivity2"
             android:parentActivityName=".Activitys.SelectOptionAuthActivity" />
