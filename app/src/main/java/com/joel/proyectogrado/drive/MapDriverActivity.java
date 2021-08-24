@@ -129,8 +129,10 @@ public class MapDriverActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (mIsconnect){
                     disconect();
+                    prueba();
                 }else{
                     StartLocation();
+                    prueba();
                 }
             }
         });
@@ -298,10 +300,19 @@ public class MapDriverActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> parametros = new HashMap<String, String>();
+                String usuario=getIntent().getStringExtra("names");
+                if (mIsconnect==false){
+                    parametros.put("idUsuario", usuario);
+                    parametros.put("Estado", "1");
+                }else {
+                    parametros.put("Estado", "");
+                    parametros.put("idUsuario", usuario);
+                    parametros.put("Latitud", tLatitud.getText().toString().trim());
+                    parametros.put("Longitud", tLongitud.getText().toString().trim());
+                    parametros.put("Direccion", tDireccion.getText().toString().trim());
+                }
 
-                parametros.put("Latitud", tLatitud.getText().toString().trim());
-                parametros.put("Longitud", tLongitud.getText().toString().trim());
-                parametros.put("Direccion", tDireccion.getText().toString().trim());
+
                 return parametros;
             }
         };
