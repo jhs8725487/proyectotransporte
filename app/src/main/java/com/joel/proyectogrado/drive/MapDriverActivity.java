@@ -78,7 +78,7 @@ public class MapDriverActivity extends AppCompatActivity {
     TextView tLatitud;
     TextView tLongitud;
     TextView tDireccion;
-    String mlatitud, mlongitud;
+    double mlatitud, mlongitud;
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
@@ -86,8 +86,8 @@ public class MapDriverActivity extends AppCompatActivity {
                 if (getApplicationContext() != null) {
                     //Localizacion del conductor en tiempo real
                     mCurrentLatLng=new LatLng(location.getLatitude(),location.getLongitude());
-                    mlatitud=String.valueOf(location.getLatitude());
-                    mlongitud=String.valueOf(location.getLongitude());
+                    mlatitud=Double.valueOf(location.getLatitude());
+                    mlongitud=Double.valueOf(location.getLongitude());
                     tLatitud.setText("Latitud "+mlatitud);
                     tLongitud.setText("Longitud "+mlongitud);
                     setLocation(location);
@@ -138,7 +138,7 @@ public class MapDriverActivity extends AppCompatActivity {
         });
     }
     public void prueba(){
-        ejecutarServicio("http://192.168.0.15//ejemploBDRemota/insertargps.php");
+        ejecutarServicio("http://192.168.0.17//ejemploBDRemota/insertargps.php");
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -167,9 +167,11 @@ public class MapDriverActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
     private void updateLocation(){
-        if (mAuthProvider.existSession() && mCurrentLatLng!=null){
-            mGeoFireProvider.SaveLocation(mAuthProvider.getId(),mCurrentLatLng);
-        }
+       // if (mAuthProvider.existSession() && mCurrentLatLng!=null){
+            String usuario=getIntent().getStringExtra("names");
+           // mGeoFireProvider.SaveLocation(mAuthProvider.getId(),mCurrentLatLng);
+            mGeoFireProvider.SaveLocation(usuario,mCurrentLatLng);
+        //}
     }
 
     @Override
@@ -277,7 +279,8 @@ public class MapDriverActivity extends AppCompatActivity {
             mIsconnect=false;
             mFusedLocation.removeLocationUpdates(mLocationCallback);
             if (mAuthProvider.existSession()) {
-                mGeoFireProvider.removeLocation(mAuthProvider.getId());
+                String usuario=getIntent().getStringExtra("names");
+                mGeoFireProvider.removeLocation(usuario);
             }
         }else{
             Toast.makeText(this, "No se puede desconectar", Toast.LENGTH_SHORT).show();
@@ -307,8 +310,8 @@ public class MapDriverActivity extends AppCompatActivity {
                 }else {
                     parametros.put("Estado", "");
                     parametros.put("idUsuario", usuario);
-                    parametros.put("Latitud", tLatitud.getText().toString().trim());
-                    parametros.put("Longitud", tLongitud.getText().toString().trim());
+                    parametros.put("Latitud", String.valueOf(mlatitud));
+                    parametros.put("Longitud", String.valueOf(mlongitud));
                     parametros.put("Direccion", tDireccion.getText().toString().trim());
                 }
 

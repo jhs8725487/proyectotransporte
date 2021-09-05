@@ -1,5 +1,7 @@
 package com.joel.proyectogrado.client;
 
+import static com.joel.proyectogrado.client.Constants.MY_DEFAULT_TIMEOUT;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
@@ -11,6 +13,7 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -56,12 +59,11 @@ public class RegisterActivity extends AppCompatActivity {
 
         MyToolbar.show(this,"Registro usuario",true);
 
-        mAuthProvider=new AuthProvider();
-        mClientProvider=new ClientProvider();
-        mDriverProvider=new DriverProvider();
+        //mAuthProvider=new AuthProvider();
+        //mClientProvider=new ClientProvider();
+        //mDriverProvider=new DriverProvider();
 
         mPref=getApplicationContext().getSharedPreferences("typeUser", MODE_PRIVATE);
-        mDialog= new SpotsDialog.Builder().setContext(RegisterActivity.this).setMessage("Espere un momento").build();
 
         mButonRegister=(Button) findViewById(R.id.btnGoToRegister);
         mTextInputEmail=(TextInputEditText) findViewById(R.id.textInputEmail);
@@ -72,14 +74,14 @@ public class RegisterActivity extends AppCompatActivity {
         mTextInputPhone=(TextInputEditText)findViewById(R.id.textInputPhone);
         rbtMasculino=(RadioButton)findViewById(R.id.rbtMasculino);
         rbtFemenino=(RadioButton)findViewById(R.id.rbtFemenino);
-        mDialog= new SpotsDialog.Builder().setContext(RegisterActivity.this).setMessage("Espere un momento").build();
+       // mDialog= new SpotsDialog.Builder().setContext(RegisterActivity.this).setMessage("Espere un momento").build();
 
 
         mButonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //if(mTextInputPassword.equals(mTextInputConfirmPassword)) {
-                    ejecutarServicio("http://192.168.0.15//ejemploBDRemota/insertar_usuario.php");
+                    ejecutarServicio("http://192.168.0.17//ejemploBDRemota/insertar_usuario.php");
                    // clickRegister();
                     //prueba();
                 //}else{
@@ -88,7 +90,8 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
-    /*void prueba(){
+   /* void prueba(){
+        String selectedUser= mPref.getString("User","");
         Toast.makeText(this, selectedUser, Toast.LENGTH_SHORT).show();
     }*/
     /*void clickRegister(){
@@ -161,7 +164,8 @@ public class RegisterActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(RegisterActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
+               // Toast.makeText(RegisterActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterActivity.this, "BEBA", Toast.LENGTH_SHORT).show();
 
             }
         }) {
@@ -180,11 +184,14 @@ public class RegisterActivity extends AppCompatActivity {
                 parametros.put("Telefono", mTextInputPhone.getText().toString());
                 parametros.put("Cedula", mTextInputCedula.getText().toString());
                 parametros.put("Correo", mTextInputEmail.getText().toString());
-                //parametros.put("usu_password", mTextInputPassword.getText().toString());
                 parametros.put("Rol",selectedUser);
                 return parametros;
             }
         };
+        /*stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                MY_DEFAULT_TIMEOUT,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));*/
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
     }

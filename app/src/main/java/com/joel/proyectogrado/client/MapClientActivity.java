@@ -19,6 +19,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
@@ -28,6 +29,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -56,11 +61,13 @@ import com.joel.proyectogrado.Activitys.UpdateinfoActivity;
 
 import com.joel.proyectogrado.Activitys.MainActivity;
 import com.joel.proyectogrado.UpdateDriveActivity;
+import com.joel.proyectogrado.drive.ConductorActivo;
 import com.joel.proyectogrado.drive.MapDriverActivity;
 import com.joel.proyectogrado.providers.GoogleApiProvider;
 import com.joel.proyectogrado.utils.DecodePoints;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -82,12 +89,14 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
     private Marker mMarker;
     private AuthProvider mAuthProvider;
     private GeofireProvider mGeoFireProvider;
+    private Handler mHandler=new Handler();
     private Button mButtonConnect;
     private boolean mIsconnect=false;
     public static final String nombres="names";
     private List<Marker> mDriversMarkers=new ArrayList<>();
     private LatLng mCurrentLatLng;
     private boolean mIsFirstTime=true;
+    RequestQueue requestQueue;
     private double mExtraOriginLat;
     private double mExtraOriginLgn;
     private double mExtraDestinationLat;
@@ -98,6 +107,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
     private LatLng mDestinationLatLng2;
     private LatLng  mOriginLatLng3;
     private LatLng mDestinationLatLng3;
+    ConductorActivo conductorActivo;
     private GoogleApiProvider mGoogleApiProvider;
     private List<LatLng> mPolylineList;
     private PolylineOptions mPolylineOptions;
@@ -163,7 +173,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         double mExtraOriginLat=-17.4135865;
         double mExtraOriginLgn=-66.156731219;
 
-
+        double Latitud, Longitud;
 
         double mExtraDestinationLat3=-17.4102568;
         double mExtraDestinationLng3=-66.150937619;
@@ -184,17 +194,33 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         mButtonConnect=findViewById(R.id.btnConnect);
         mAuthProvider=new AuthProvider();
         mGeoFireProvider=new GeofireProvider();
+        conductorActivo= new ConductorActivo(Latitud,Longitud);
         mButtonConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mIsconnect){
+                /*if (mIsconnect){
                     disconect();
                 }else{
                     StartLocation();
-                }
+                }*/
+                buscarConductores("http://192.168.0.17//ejemploBDRemota/buscar_conductor.php?idUsuario=3");
             }
         });
     }
+    public void startRepeating(){
+        //mHandler.postDelayed(mToastRunnable,5000);
+        mToastRunnable.run();
+    }
+    public void stopRepeating(){
+        mHandler.removeCallbacks(mToastRunnable);
+    }
+    private Runnable mToastRunnable= new Runnable() {
+        @Override
+        public void run() {
+            Toast.makeText(MapClientActivity.this, "Patricia Escalera", Toast.LENGTH_SHORT).show();
+            mHandler.postDelayed(this, 3000);
+        }
+    };
 private void drawRoute(LatLng Origen, LatLng Destino){
         mGoogleApiProvider.getDirections(Origen,Destino).enqueue(new Callback<String>() {
             @Override
@@ -308,6 +334,7 @@ private void drawRoute(LatLng Origen, LatLng Destino){
             }
         }
     }
+    //Este metodo me muestra los conductores activos cerca de un radio determinado
     public void getActiveDrivers(){
         mGeoFireProvider.getActiveDrivers(mCurrentLatLng).addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
@@ -320,6 +347,11 @@ private void drawRoute(LatLng Origen, LatLng Destino){
                         }
                     }
                 }
+               /* LatLng driverLatLng=new LatLng(location.latitude, location.longitude);
+                Marker marker=mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Conductor disponible").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_car)));
+                marker.setTag(key);
+                mDriversMarkers.add(marker);*/
+
                 LatLng driverLatLng=new LatLng(location.latitude, location.longitude);
                 Marker marker=mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Conductor disponible").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_car)));
                 marker.setTag(key);
@@ -430,20 +462,21 @@ private void drawRoute(LatLng Origen, LatLng Destino){
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
-        mMap.addMarker(new MarkerOptions().position(mOriginLatLng).title("Origen").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_pin_red)));
-        mMap.addMarker(new MarkerOptions().position(mDestinationLatLng).title("Destino").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_pin_blue)));
+        //startRepeating();
+        mMap.addMarker(new MarkerOptions().position(mOriginLatLng).title("Origen").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_car)));
+       // mMap.addMarker(new MarkerOptions().position(mDestinationLatLng).title("Destino").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_pin_blue)));
 
-        mMap.addMarker(new MarkerOptions().position(mOriginLatLng2).title("Origen").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_pin_red)));
-        mMap.addMarker(new MarkerOptions().position(mDestinationLatLng2).title("Destino").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_pin_blue)));
+        //mMap.addMarker(new MarkerOptions().position(mOriginLatLng2).title("Origen").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_pin_red)));
+        //mMap.addMarker(new MarkerOptions().position(mDestinationLatLng2).title("Destino").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_pin_blue)));
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
                 new CameraPosition.Builder()
                 .target(mOriginLatLng)
                 .zoom(14f)
                 .build()
         ));
-        drawRoute(mOriginLatLng,mDestinationLatLng);
-        drawRoute(mOriginLatLng2,mDestinationLatLng2);
-        drawRoute(mOriginLatLng3,mDestinationLatLng3);
+        //drawRoute(mOriginLatLng,mDestinationLatLng);
+        //drawRoute(mOriginLatLng2,mDestinationLatLng2);
+        //drawRoute(mOriginLatLng3,mDestinationLatLng3);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -456,5 +489,35 @@ private void drawRoute(LatLng Origen, LatLng Destino){
         mLocationRequest.setSmallestDisplacement(5);
 
 
+    }
+    public void buscarConductores(String URL){
+
+        JsonArrayRequest jsonArrayRequest=new JsonArrayRequest(URL, new com.android.volley.Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                JSONObject jsonObject = null;
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        jsonObject = response.getJSONObject(i);
+                         double Latitud= jsonObject.getDouble("Latitud");
+                         double Longitud= jsonObject.getDouble("Longitud");
+                         conductorActivo.setLatitud(Latitud);
+                         conductorActivo.setLongitud(Longitud);
+                    } catch (JSONException e) {
+
+                        Toast.makeText(MapClientActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                Toast.makeText(MapClientActivity.this, "Lat "+conductorActivo.getLatitud()+" Lon "+conductorActivo.getLongitud(), Toast.LENGTH_SHORT).show();
+            }
+        }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(MapClientActivity.this, "FALLO LA CONEXION", Toast.LENGTH_SHORT).show();
+            }
+        }
+        );
+        requestQueue= Volley.newRequestQueue(this);
+        requestQueue.add(jsonArrayRequest);
     }
 }
