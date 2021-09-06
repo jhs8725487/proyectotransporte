@@ -31,7 +31,7 @@ public class ConductorActivo {
     }
 
     public void setDireccion(String direccion) {
-       this.Direccion = direccion;
+        this.Direccion = direccion;
     }
 
     public String getEstado() {
