@@ -172,7 +172,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         double mExtraDestinationLng3=-66.150937619;
         double mExtraOriginLat3=-17.4135865;
         double mExtraOriginLgn3=-66.156731219;*/
-        buscarConductores("http://192.168.0.17//ejemploBDRemota/buscar_conductor.php?idUsuario=3");
+        buscarConductores("http://192.168.0.15//ejemploBDRemota/buscar_conductor.php?idUsuario=3");
         mOriginLatLng = new LatLng(Latitud, Longitud);
         mDestinationLatLng=new LatLng(mExtraDestinationLat,mExtraDestinationLng);
 
@@ -196,6 +196,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
                     StartLocation();
                 }*/
                 startRepeating();
+                //buscarConductores("http://192.168.0.15//ejemploBDRemota/buscar_conductor.php?idUsuario=3");
                 //mMarker.remove();
             }
         });
@@ -222,7 +223,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         @Override
         public void run() {
             //Toast.makeText(MapClientActivity.this, "Patricia Escalera", Toast.LENGTH_SHORT).show();
-             buscarConductores("http://192.168.0.17//ejemploBDRemota/buscar_conductor.php?idUsuario=3");
+            buscarConductores("http://192.168.0.15//ejemploBDRemota/buscar_conductor.php?idUsuario=3");
             mHandler.postDelayed(this, 7000);
         }
     };
@@ -505,9 +506,14 @@ private void drawRoute(LatLng Origen, LatLng Destino){
                 for (int i = 0; i < response.length(); i++) {
                     try {
                         jsonObject = response.getJSONObject(i);
-                          double Latitud2= jsonObject.getDouble("Latitud");
-                          double Longitud2= jsonObject.getDouble("Longitud");
-                          registroCoordenadas(Latitud2,Longitud2);
+                         String Estado=jsonObject.getString("Estado");
+                         if(Estado.equals("1")) {
+                             double Latitud2 = jsonObject.getDouble("Latitud");
+                             double Longitud2 = jsonObject.getDouble("Longitud");
+                             registroCoordenadas(Latitud2,Longitud2);
+                         }else{
+                             mMarker.remove();
+                         }
                     } catch (JSONException e) {
 
                         Toast.makeText(MapClientActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
