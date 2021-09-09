@@ -79,7 +79,7 @@ public class UpdateinfoActivity extends AppCompatActivity {
                 //String Mensaje= mPref.getString("Usuario","No existe");
                 //buscarUsuario("http://192.168.0.15//ejemploBDRemota/buscar_usuario.php");
                 //buscarUsuario("http://192.168.0.15//ejemploBDRemota/buscar_usuario.php?idUsuario="+Mensaje+"");
-               ejecutarServicio("http://192.168.0.16//ejemploBDRemota/editar_usuario.php");
+               ejecutarServicio("http://192.168.0.17//ejemploBDRemota/editar_usuario.php");
             }
         });
     }

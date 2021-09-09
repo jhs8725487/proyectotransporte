@@ -111,8 +111,8 @@ public class ConfirmPassActivity2 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-               ejecutarServicio("http://192.168.0.16//ejemploBDRemota/insertar_usuario.php");
-               ejecutarServicio2("http://192.168.0.16//ejemploBDRemota/upload.php");
+               ejecutarServicio("http://192.168.0.17//ejemploBDRemota/insertar_usuario.php");
+               ejecutarServicio2("http://192.168.0.17//ejemploBDRemota/upload.php");
                 //String imagen=getStringImagen(bitmap);
                     //clickRegister();
                 //prueba();

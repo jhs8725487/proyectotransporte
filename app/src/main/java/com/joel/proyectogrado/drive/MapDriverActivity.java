@@ -138,7 +138,7 @@ public class MapDriverActivity extends AppCompatActivity {
         });
     }
     public void prueba(){
-        ejecutarServicio("http://192.168.0.15//ejemploBDRemota/insertargps.php");
+        ejecutarServicio("http://192.168.0.17//ejemploBDRemota/insertargps.php");
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
