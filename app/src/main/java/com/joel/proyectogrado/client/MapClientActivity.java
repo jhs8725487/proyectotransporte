@@ -102,13 +102,11 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
     private LatLng  mOriginLatLng3;
     private LatLng mDestinationLatLng3;
     ConductorActivo conductorActivo;
-    ArrayList <Double>Lat2;
-    ArrayList <Double>Long2;
-    ArrayList <Integer>Usuario;
     SharedPreferences mPref;
     private GoogleApiProvider mGoogleApiProvider;
     private List<LatLng> mPolylineList;
     public double Latitud=-17.4135865, Longitud=-66.156731219;
+    public int User;
     private PolylineOptions mPolylineOptions;
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
@@ -156,9 +154,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         mMapFragment.getMapAsync(this);
         mPref= getSharedPreferences("typeUser",Context.MODE_PRIVATE);
         String usuario=getIntent().getStringExtra("names");
-        Lat2= new ArrayList<>();
-        Long2=new ArrayList<>();
-        Usuario=new ArrayList<>();
+
          /*double mExtraDestinationLat=-17.4902578;
          double mExtraDestinationLng=-66.1770539;
          double mExtraOriginLat=-17.3781992;
@@ -178,7 +174,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         double mExtraDestinationLng3=-66.150937619;
         double mExtraOriginLat3=-17.4135865;
         double mExtraOriginLgn3=-66.156731219;*/
-        buscarConductores("http://192.168.0.17//ejemploBDRemota/buscar_conductor.php?idUsuario=3");
+        //buscarConductores("http://192.168.0.17//ejemploBDRemota/buscar_conductor.php");
         mOriginLatLng = new LatLng(Latitud, Longitud);
         mDestinationLatLng=new LatLng(mExtraDestinationLat,mExtraDestinationLng);
 
@@ -202,49 +198,94 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
                     StartLocation();
                 }*/
                 startRepeating();
-                //buscarConductores("http://192.168.0.17//ejemploBDRemota/buscar_conductor.php?idUsuario=3");
+               // buscarConductores("http://192.168.0.17//ejemploBDRemota/buscar_conductor.php");
+                //startRepeating();
                 //mMarker.remove();
             }
         });
     }
-    public void registroCoordenadas(ArrayList <Double> latitud,ArrayList<Double> longitud,ArrayList<Integer> Usuario){
-        //this.Latitud=latitud;
-        //this.Longitud=longitud;
-        this.Lat2=latitud;
-        this.Long2=longitud;
-        //mOriginLatLng = new LatLng(latitud, longitud);
+    public void UpdateCoordinates(double latitud, double longitud, int Usuario){
+        //LatLng driverLatLng = new LatLng(latitud, longitud);
+        for (Marker marker: mDriversMarkers){
+            if(marker.getTag()!=null){
+                if(marker.getTag().equals(Usuario)){
+                    /*marker.remove();
+                    mDriversMarkers.remove(marker);*/
+                    marker.setPosition(new LatLng(latitud,longitud));
+                    //mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Conductor disponible").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_car)));
+                    Toast.makeText(MapClientActivity.this, marker.getPosition()+"", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+        //Toast.makeText(MapClientActivity.this, latitud+""+longitud+"", Toast.LENGTH_SHORT).show();
+       // Toast.makeText(MapClientActivity.this, "Actualizando...", Toast.LENGTH_SHORT).show();
+    }
+    public void InsertCoordinates(double latitud, double longitud, int Usuario){
+        LatLng driverLatLng = new LatLng(latitud, longitud);
+        Marker marker = mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Conductor disponible").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_car)));
+        marker.setTag(Usuario);
+        mDriversMarkers.add(marker);
+        Toast.makeText(MapClientActivity.this, "Insertando...", Toast.LENGTH_SHORT).show();
+    }
+    public boolean bandera(int Usuario){
         for(Marker marker: mDriversMarkers){
             if(marker.getTag()!=null){
                 if(marker.getTag().equals(Usuario)){
+                    //return;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    public void onKeyexit(int Usuario){
+        for (Marker marker:mDriversMarkers){
+            if (marker.getTag()!=null){
+                if (marker.getTag().equals(Usuario)){
+                    marker.remove();
+                    mDriversMarkers.remove(marker);
+                    //Toast.makeText(MapClientActivity.this, "Desconectando...", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
         }
-        for (int i=0; i<latitud.size(); i++){
-            mOriginLatLng=new LatLng(latitud.get(i),longitud.get(i));
-
-        }
-        /*if (mMarker!=null){
-            mMarker.remove();
+    }
+    public void registroCoordenadas(double latitud,double longitud, int Usuario, String Estado){
+        this.Latitud=latitud;
+        this.Longitud=longitud;
+        this.User=Usuario;
+        //mOriginLatLng = new LatLng(latitud, longitud);
+     /*   if (marker!=null){
+            marker.remove();
         }*/
-        mMarker=mMap.addMarker(new MarkerOptions().position(mOriginLatLng).title("Origen").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_car)));
-        mMarker.setTag(Usuario);
-        mDriversMarkers.add(mMarker);
-
-        Toast.makeText(MapClientActivity.this, latitud.get(0)+""+longitud.get(0)+"", Toast.LENGTH_SHORT).show();
+        /*for(Marker marker: mDriversMarkers){
+            if(marker.getTag()!=null){
+                if(marker.getTag().equals(Usuario)){
+                     //return;
+                }
+            }
+        }*/
+        boolean flag= bandera(Usuario);
+        if(flag==false && Estado.equals("1")) {
+            InsertCoordinates(latitud, longitud, Usuario);
+        }else if(Estado.equals("1")){
+            UpdateCoordinates(latitud, longitud, Usuario);
+        }else{
+            onKeyexit(Usuario);
+        }
     }
     public void startRepeating(){
         //mHandler.postDelayed(mToastRunnable,5000);
         mToastRunnable.run();
     }
-    public void stopRepeating(){
+    /*public void stopRepeating(){
         mHandler.removeCallbacks(mToastRunnable);
-    }
+    }*/
     private Runnable mToastRunnable= new Runnable() {
         @Override
         public void run() {
             //Toast.makeText(MapClientActivity.this, "Patricia Escalera", Toast.LENGTH_SHORT).show();
-            buscarConductores("http://192.168.0.17//ejemploBDRemota/buscar_conductor.php?idUsuario=3");
+            buscarConductores("http://192.168.0.17//ejemploBDRemota/buscar_conductor.php");
             mHandler.postDelayed(this, 7000);
         }
     };
@@ -491,7 +532,7 @@ private void drawRoute(LatLng Origen, LatLng Destino){
 
 
        // startRepeating();
-        mMarker=mMap.addMarker(new MarkerOptions().position(mOriginLatLng).title("Origen").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_car)));
+        //mMarker=mMap.addMarker(new MarkerOptions().position(mOriginLatLng).title("Origen").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_car)));
        // mMap.addMarker(new MarkerOptions().position(mDestinationLatLng).title("Destino").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_pin_blue)));
 
         //mMap.addMarker(new MarkerOptions().position(mOriginLatLng2).title("Origen").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_pin_red)));
@@ -525,21 +566,30 @@ private void drawRoute(LatLng Origen, LatLng Destino){
             public void onResponse(JSONArray response) {
                 JSONObject jsonObject = null;
                // Toast.makeText(MapClientActivity.this, ""+response.length(), Toast.LENGTH_SHORT).show();
+                ArrayList <Double>Lat2;
+                ArrayList <Double>Long2;
+                ArrayList <Integer>Usuario;
+                ArrayList <String>Estado;
+                Lat2= new ArrayList<>();
+                Long2=new ArrayList<>();
+                Usuario=new ArrayList<>();
+                Estado=new ArrayList<>();
                for (int i = 0; i < response.length(); i++) {
                     try {
                         jsonObject = response.getJSONObject(i);
-                         String Estado=jsonObject.getString("Estado");
-                         if(Estado.equals("1")) {
+                          Estado.add(jsonObject.getString("Estado"));
+                         //if(Estado.equals("1")) {
                              //double Latitud2 = jsonObject.getDouble("Latitud");
                              //double Longitud2 = jsonObject.getDouble("Longitud");
                              Usuario.add(jsonObject.getInt("idUsuario"));
                              Lat2.add(jsonObject.getDouble("Latitud"));
                              Long2.add(jsonObject.getDouble("Longitud"));
                              //Toast.makeText(MapClientActivity.this, ""+usuario, Toast.LENGTH_SHORT).show();
-                             registroCoordenadas(Lat2,Long2,Usuario);
-                         }else{
-                             mMarker.remove();
-                         }
+                             registroCoordenadas(Lat2.get(i),Long2.get(i),Usuario.get(i),Estado.get(i));
+                             //Toast.makeText(MapClientActivity.this, Estado.get(i)+" ", Toast.LENGTH_SHORT).show();
+                         //}else{
+                           //  mMarker.remove();
+                         //}
                     } catch (JSONException e) {
 
                         Toast.makeText(MapClientActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
