@@ -119,12 +119,12 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
 
                     }
                     //mCurrentLatLng=new LatLng(location.getLatitude(),location.getLongitude());
-                    mMarker=mMap.addMarker(new MarkerOptions().position(
+                   /* mMarker=mMap.addMarker(new MarkerOptions().position(
                             new LatLng(location.getLatitude(), location.getLongitude())
                     )
                             .title("Tu posicion")
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.iconuser))
-                    );
+                    );*/
                     //OBTENER LA LOCALIZACION DEL USUARIO EN TIEMPO REAL
                     mMap.moveCamera(CameraUpdateFactory.newCameraPosition(
                             new CameraPosition.Builder()
@@ -177,7 +177,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
             }
         });
     }
-    public void UpdateCoordinates(double latitud, double longitud, int Usuario){
+    public void UpdateCoordinates(double latitud, double longitud, int Usuario, String Disponibilidad){
         //LatLng driverLatLng = new LatLng(latitud, longitud);
         for (Marker marker: mDriversMarkers){
             if(marker.getTag()!=null){
@@ -185,6 +185,13 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
                     /*marker.remove();
                     mDriversMarkers.remove(marker);*/
                     marker.setPosition(new LatLng(latitud,longitud));
+                    if (Disponibilidad.equals("0")){
+                        marker.setTitle("Sin espacio Norte");
+                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.redcar));
+                    }else{
+                        marker.setTitle("Con espacio Sud");
+                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.greencar));
+                    }
                     //mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Conductor disponible").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_car)));
                     //Toast.makeText(MapClientActivity.this, marker.getPosition()+"", Toast.LENGTH_SHORT).show();
                     Toast.makeText(MapClientActivity.this, "Actualizando...", Toast.LENGTH_SHORT).show();
@@ -224,7 +231,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
             }
         }
     }
-    public void registroCoordenadas(double latitud,double longitud, int Usuario, String Estado){
+    public void registroCoordenadas(double latitud,double longitud, int Usuario, String Estado, String Disponibilidad){
         this.Latitud=latitud;
         this.Longitud=longitud;
         this.User=Usuario;
@@ -233,7 +240,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         if(flag==false && Estado.equals("1")) {
             InsertCoordinates(latitud, longitud, Usuario);
         }else if(Estado.equals("1")){
-            UpdateCoordinates(latitud, longitud, Usuario);
+            UpdateCoordinates(latitud, longitud, Usuario, Disponibilidad);
         }else{
             onKeyexit(Usuario);
         }
@@ -241,6 +248,13 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
     public void GraficarRuta(double origenLatitud, double origenLongitud, double destinoLatitud, double destinoLongitud){
         this.mOriginLatLng = new LatLng(origenLatitud, origenLongitud);
         this.mDestinationLatLng=new LatLng(destinoLatitud,destinoLongitud);
+
+        double latitudOrigin=-17.4902578, longitudOrigin=-66.1770539;
+        double latitudDestin=-17.3701456, longitudDestin=-66.2071849;
+        LatLng RouteiLatLng=new LatLng(latitudOrigin,longitudOrigin);
+        LatLng RoutefLatLng=new LatLng(latitudDestin,longitudDestin);
+        mMap.addMarker(new MarkerOptions().position(RouteiLatLng).title("Villa Isrrael").icon(BitmapDescriptorFactory.fromResource(R.drawable.redflag)));
+        mMap.addMarker(new MarkerOptions().position(RoutefLatLng).title("Villa Granado").icon(BitmapDescriptorFactory.fromResource(R.drawable.greenflag)));
 
        Marker marker= mMap.addMarker(new MarkerOptions().position(mOriginLatLng).title("Origen").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_pin_red)));
        Marker marker2= mMap.addMarker(new MarkerOptions().position(mDestinationLatLng).title("Destino").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_pin_blue)));
@@ -301,7 +315,7 @@ private void drawRoute(LatLng Origen, LatLng Destino){
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     if (gpsActive()) {
                         mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                        mMap.setMyLocationEnabled(true);
+                        mMap.setMyLocationEnabled(false);
                     } else {
                         ShowAlerDialogNOGPS();
                     }
@@ -358,10 +372,10 @@ private void drawRoute(LatLng Origen, LatLng Destino){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 if (gpsActive()) {
-                    //mButtonConnect.setText("Desconectarse");
-                    //mIsconnect=true;
+                    mButtonConnect.setText("Desconectarse");
+                    mIsconnect=true;
                     mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                    mMap.setMyLocationEnabled(true);
+                    mMap.setMyLocationEnabled(false);
                 } else {
                     ShowAlerDialogNOGPS();
                 }
@@ -371,7 +385,7 @@ private void drawRoute(LatLng Origen, LatLng Destino){
         } else {
             if (gpsActive()) {
                 mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                mMap.setMyLocationEnabled(true);
+                mMap.setMyLocationEnabled(false);
             } else {
                 ShowAlerDialogNOGPS();
             }
@@ -446,26 +460,6 @@ private void drawRoute(LatLng Origen, LatLng Destino){
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
-
-       // startRepeating();
-        /*mMap.addMarker(new MarkerOptions().position(mOriginLatLng).title("Origen").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_pin_red)));
-        mMap.addMarker(new MarkerOptions().position(mDestinationLatLng).title("Destino").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_pin_blue)));
-
-        mMap.addMarker(new MarkerOptions().position(mOriginLatLng2).title("Origen").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_pin_red)));
-        mMap.addMarker(new MarkerOptions().position(mDestinationLatLng2).title("Destino").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_pin_blue)));
-
-        mMap.addMarker(new MarkerOptions().position(mOriginLatLng3).title("Origen").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_pin_red)));
-        mMap.addMarker(new MarkerOptions().position(mDestinationLatLng3).title("Destino").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_pin_blue)));*/
-        /*mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
-                new CameraPosition.Builder()
-                .target(mOriginLatLng)
-                .zoom(14f)
-                .build()
-        ));*/
-        /*drawRoute(mOriginLatLng,mDestinationLatLng);
-        drawRoute(mOriginLatLng2,mDestinationLatLng2);
-        drawRoute(mOriginLatLng3,mDestinationLatLng3);*/
-
         /*if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }*/
@@ -484,23 +478,25 @@ private void drawRoute(LatLng Origen, LatLng Destino){
             @Override
             public void onResponse(JSONArray response) {
                 JSONObject jsonObject = null;
-               // Toast.makeText(MapClientActivity.this, ""+response.length(), Toast.LENGTH_SHORT).show();
                 ArrayList <Double>Lat2;
                 ArrayList <Double>Long2;
                 ArrayList <Integer>Usuario;
                 ArrayList <String>Estado;
+                ArrayList <String> Disponibilidad;
                 Lat2= new ArrayList<>();
                 Long2=new ArrayList<>();
                 Usuario=new ArrayList<>();
                 Estado=new ArrayList<>();
+                Disponibilidad=new ArrayList<>();
                for (int i = 0; i < response.length(); i++) {
                     try {
                         jsonObject = response.getJSONObject(i);
-                          Estado.add(jsonObject.getString("Estado"));
+                            Disponibilidad.add(jsonObject.getString("Disponibilidad"));
+                            Estado.add(jsonObject.getString("Estado"));
                              Usuario.add(jsonObject.getInt("idUsuario"));
                              Lat2.add(jsonObject.getDouble("Latitud"));
                              Long2.add(jsonObject.getDouble("Longitud"));
-                             registroCoordenadas(Lat2.get(i),Long2.get(i),Usuario.get(i),Estado.get(i));
+                             registroCoordenadas(Lat2.get(i),Long2.get(i),Usuario.get(i),Estado.get(i),Disponibilidad.get(i));
                     } catch (JSONException e) {
 
                         Toast.makeText(MapClientActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();

@@ -70,9 +70,12 @@ public class MapDriverActivity extends AppCompatActivity {
     private Marker mMarker;
     SharedPreferences mPref;
     private Button mButtonConnect;
+    private Button mButtonwithspace;
+    private Button mButtonwithoutspace;
     private final static int LOCATION_REQUEST_CODE = 1;
     private final static int SETTINGS_REQUEST_CODE = 2;
     private boolean mIsconnect=false;
+    private boolean mWithSpace=false;
     public static final String nombres="names";
     TextView cajaBienvenido;
     TextView tLatitud;
@@ -110,6 +113,8 @@ public class MapDriverActivity extends AppCompatActivity {
         mAuthProvider=new AuthProvider();
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
         mButtonConnect=findViewById(R.id.btnEnruta);
+        mButtonwithspace=findViewById(R.id.btnConEspacio);
+        mButtonwithoutspace=findViewById(R.id.btnSinEspacio);
         mGeoFireProvider=new GeofireProvider();
         mLocationRequest=new LocationRequest();
         mLocationRequest.setInterval(1000);
@@ -136,9 +141,22 @@ public class MapDriverActivity extends AppCompatActivity {
                 }
             }
         });
+        mButtonwithspace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mWithSpace=true;
+                Marcarestado("http://192.168.0.15//ejemploBDRemota/insertarestado.php");
+            }
+        });
+        mButtonwithoutspace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Marcarestado("http://192.168.0.15//ejemploBDRemota/insertarestado.php");
+            }
+        });
     }
     public void prueba(){
-        ejecutarServicio("http://192.168.0.17//ejemploBDRemota/insertargps.php");
+        ejecutarServicio("http://192.168.0.15//ejemploBDRemota/insertargps.php");
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -316,6 +334,38 @@ public class MapDriverActivity extends AppCompatActivity {
                 }
 
 
+                return parametros;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
+
+    private void Marcarestado(String URL) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+
+            public void onResponse(String response) {
+                Toast.makeText(MapDriverActivity.this, "OPERACION EXITOSA", Toast.LENGTH_SHORT).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(MapDriverActivity.this, error.toString(), Toast.LENGTH_SHORT).show();
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                String usuario=getIntent().getStringExtra("names");
+                if (mWithSpace==true){
+                    parametros.put("idUsuario", usuario);
+                    parametros.put("Disponibilidad", "1");
+                    mWithSpace=false;
+                }else {
+                    parametros.put("idUsuario", usuario);
+                    parametros.put("Disponibilidad", "0");
+                }
                 return parametros;
             }
         };
