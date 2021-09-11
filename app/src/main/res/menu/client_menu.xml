@@ -2,14 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/action_logout"
-        android:title="Cerrar sesion"
-        app:showAsAction="never" />
+
     <item android:id="@+id/action_ruta"
         android:title="Ver Ruta"
         app:showAsAction="never" />
     <item android:id="@+id/editar_informacion"
         android:title="Editar mi perfil"
+        app:showAsAction="never" />
+    <item android:id="@+id/conductores_disponibles"
+        android:title="Ver conductores disponibles"
+        app:showAsAction="never" />
+    <item android:id="@+id/action_logout"
+        android:title="Cerrar sesion"
         app:showAsAction="never" />
 
 </menu>
