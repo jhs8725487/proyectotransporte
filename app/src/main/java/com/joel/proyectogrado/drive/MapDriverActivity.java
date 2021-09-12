@@ -81,6 +81,7 @@ public class MapDriverActivity extends AppCompatActivity {
     TextView tLatitud;
     TextView tLongitud;
     TextView tDireccion;
+    boolean flag;
     double mlatitud, mlongitud;
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
@@ -134,10 +135,11 @@ public class MapDriverActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (mIsconnect){
                     disconect();
-                    prueba();
+                    //prueba();
                 }else{
                     StartLocation();
                     prueba();
+                    Direccion();
                 }
             }
         });
@@ -154,6 +156,27 @@ public class MapDriverActivity extends AppCompatActivity {
                 Marcarestado("http://192.168.0.15//ejemploBDRemota/insertarestado.php");
             }
         });
+    }
+    public void Direccion(){
+        flag=true;
+        final CharSequence[] opciones={"Me dirijo al norte", "Me dirijo al sud"};
+        Boolean bandera=true;
+        final AlertDialog.Builder alertOpciones= new AlertDialog.Builder(MapDriverActivity.this);
+        alertOpciones.setTitle("Hacia donde se dirije?");
+        alertOpciones.setItems(opciones, new DialogInterface.OnClickListener() {
+            String usuario=getIntent().getStringExtra("names");
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (opciones[i].equals("Me dirijo al norte")){
+                    ejecutarServicio("http://192.168.0.15//ejemploBDRemota/insertargps.php?Camino="+"Norte");
+                }else if (opciones[i].equals("Me dirijo al sud")){
+                    ejecutarServicio("http://192.168.0.15//ejemploBDRemota/insertargps.php?Camino="+"Sud");
+                }else{
+                    dialogInterface.dismiss();
+                }
+            }
+        });
+        alertOpciones.show();
     }
     public void prueba(){
         ejecutarServicio("http://192.168.0.15//ejemploBDRemota/insertargps.php");
@@ -230,6 +253,7 @@ public class MapDriverActivity extends AppCompatActivity {
             }
         }
     }
+
     private boolean gpsActive() {
         boolean isActive = false;
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -358,6 +382,10 @@ public class MapDriverActivity extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> parametros = new HashMap<String, String>();
                 String usuario=getIntent().getStringExtra("names");
+                if(flag==true){
+                    parametros.put("idUsuario", usuario);
+                    flag=false;
+                }
                 if (mWithSpace==true){
                     parametros.put("idUsuario", usuario);
                     parametros.put("Disponibilidad", "1");

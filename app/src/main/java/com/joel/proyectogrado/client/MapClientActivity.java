@@ -81,8 +81,6 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
     private final static int LOCATION_REQUEST_CODE = 1;
     private final static int SETTINGS_REQUEST_CODE = 2;
     private Marker mMarker;
-    private AuthProvider mAuthProvider;
-    private GeofireProvider mGeoFireProvider;
     private Handler mHandler=new Handler();
     private Button mButtonConnect;
     private boolean mIsconnect=false;
@@ -91,17 +89,8 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
     private LatLng mCurrentLatLng;
     private boolean mIsFirstTime=true;
     RequestQueue requestQueue;
-    private double mExtraOriginLat;
-    private double mExtraOriginLgn;
-    private double mExtraDestinationLat;
-    private double mExtraDestinationLng;
     private LatLng  mOriginLatLng;
     private LatLng mDestinationLatLng;
-    private LatLng  mOriginLatLng2;
-    private LatLng mDestinationLatLng2;
-    private LatLng  mOriginLatLng3;
-    private LatLng mDestinationLatLng3;
-    ConductorActivo conductorActivo;
     SharedPreferences mPref;
     private GoogleApiProvider mGoogleApiProvider;
     private List<LatLng> mPolylineList;
@@ -172,12 +161,13 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
                 //startRepeating();
                // buscarConductores("http://192.168.0.15//ejemploBDRemota/buscar_conductor.php");
                 StartLocation();
-                //startRepeating();
+                startRepeating();
                 //mMarker.remove();
             }
         });
     }
-    public void UpdateCoordinates(double latitud, double longitud, int Usuario, String Disponibilidad){
+
+    public void UpdateCoordinates(double latitud, double longitud, int Usuario, String Disponibilidad, String Camino){
         //LatLng driverLatLng = new LatLng(latitud, longitud);
         for (Marker marker: mDriversMarkers){
             if(marker.getTag()!=null){
@@ -186,10 +176,10 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
                     mDriversMarkers.remove(marker);*/
                     marker.setPosition(new LatLng(latitud,longitud));
                     if (Disponibilidad.equals("0")){
-                        marker.setTitle("Sin espacio Norte");
+                        marker.setTitle("Sin espacio "+Camino);
                         marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.redcar));
                     }else{
-                        marker.setTitle("Con espacio Sud");
+                        marker.setTitle("Con espacio "+Camino);
                         marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.greencar));
                     }
                     //mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Conductor disponible").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_car)));
@@ -231,7 +221,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
             }
         }
     }
-    public void registroCoordenadas(double latitud,double longitud, int Usuario, String Estado, String Disponibilidad){
+    public void registroCoordenadas(double latitud,double longitud, int Usuario, String Estado, String Disponibilidad, String Camino){
         this.Latitud=latitud;
         this.Longitud=longitud;
         this.User=Usuario;
@@ -240,7 +230,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         if(flag==false && Estado.equals("1")) {
             InsertCoordinates(latitud, longitud, Usuario);
         }else if(Estado.equals("1")){
-            UpdateCoordinates(latitud, longitud, Usuario, Disponibilidad);
+            UpdateCoordinates(latitud, longitud, Usuario, Disponibilidad, Camino);
         }else{
             onKeyexit(Usuario);
         }
@@ -445,15 +435,11 @@ private void drawRoute(LatLng Origen, LatLng Destino){
     }
 
     void logout() {
-        mAuthProvider.Logout();
         Intent intent = new Intent(MapClientActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
     }
-    private void updateLocation(){
-        mGeoFireProvider.SaveLocation(mAuthProvider.getId(), mCurrentLatLng);
 
-    }
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
@@ -483,20 +469,23 @@ private void drawRoute(LatLng Origen, LatLng Destino){
                 ArrayList <Integer>Usuario;
                 ArrayList <String>Estado;
                 ArrayList <String> Disponibilidad;
+                ArrayList <String> Camino;
                 Lat2= new ArrayList<>();
                 Long2=new ArrayList<>();
                 Usuario=new ArrayList<>();
                 Estado=new ArrayList<>();
                 Disponibilidad=new ArrayList<>();
+                Camino = new ArrayList<>();
                for (int i = 0; i < response.length(); i++) {
                     try {
                         jsonObject = response.getJSONObject(i);
                             Disponibilidad.add(jsonObject.getString("Disponibilidad"));
+                            Camino.add(jsonObject.getString("Camino"));
                             Estado.add(jsonObject.getString("Estado"));
                              Usuario.add(jsonObject.getInt("idUsuario"));
                              Lat2.add(jsonObject.getDouble("Latitud"));
                              Long2.add(jsonObject.getDouble("Longitud"));
-                             registroCoordenadas(Lat2.get(i),Long2.get(i),Usuario.get(i),Estado.get(i),Disponibilidad.get(i));
+                             registroCoordenadas(Lat2.get(i),Long2.get(i),Usuario.get(i),Estado.get(i),Disponibilidad.get(i),Camino.get(i));
                     } catch (JSONException e) {
 
                         Toast.makeText(MapClientActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
