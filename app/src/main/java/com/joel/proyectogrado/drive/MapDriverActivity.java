@@ -135,11 +135,11 @@ public class MapDriverActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (mIsconnect){
                     disconect();
-                    //prueba();
-                }else{
-                    StartLocation();
                     prueba();
+                }else{
+                    //StartLocation();
                     Direccion();
+                    //prueba();
                 }
             }
         });
@@ -147,13 +147,13 @@ public class MapDriverActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mWithSpace=true;
-                Marcarestado("http://192.168.0.15//ejemploBDRemota/insertarestado.php");
+                Marcarestado("http://192.168.0.21//ejemploBDRemota/insertarestado.php");
             }
         });
         mButtonwithoutspace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Marcarestado("http://192.168.0.15//ejemploBDRemota/insertarestado.php");
+                Marcarestado("http://192.168.0.21//ejemploBDRemota/insertarestado.php");
             }
         });
     }
@@ -168,18 +168,20 @@ public class MapDriverActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (opciones[i].equals("Me dirijo al norte")){
-                    ejecutarServicio("http://192.168.0.15//ejemploBDRemota/insertargps.php?Camino="+"Norte");
+                    ejecutarServicio("http://192.168.0.21//ejemploBDRemota/insertargps.php?Camino="+"Norte");
                 }else if (opciones[i].equals("Me dirijo al sud")){
-                    ejecutarServicio("http://192.168.0.15//ejemploBDRemota/insertargps.php?Camino="+"Sud");
+                    ejecutarServicio("http://192.168.0.21//ejemploBDRemota/insertargps.php?Camino="+"Sud");
                 }else{
                     dialogInterface.dismiss();
                 }
+                StartLocation();
+                prueba();
             }
         });
         alertOpciones.show();
     }
     public void prueba(){
-        ejecutarServicio("http://192.168.0.15//ejemploBDRemota/insertargps.php");
+        ejecutarServicio("http://192.168.0.21//ejemploBDRemota/insertargps.php");
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -349,8 +351,9 @@ public class MapDriverActivity extends AppCompatActivity {
                 if (mIsconnect==false){
                     parametros.put("idUsuario", usuario);
                     parametros.put("Estado", "1");
+                    //mIsconnect=true;
                 }else {
-                    parametros.put("Estado", "");
+                    //parametros.put("Estado", "");
                     parametros.put("idUsuario", usuario);
                     parametros.put("Latitud", String.valueOf(mlatitud));
                     parametros.put("Longitud", String.valueOf(mlongitud));

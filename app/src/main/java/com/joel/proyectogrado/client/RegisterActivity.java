@@ -81,7 +81,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //if(mTextInputPassword.equals(mTextInputConfirmPassword)) {
-                    ejecutarServicio("http://192.168.0.17//ejemploBDRemota/insertar_usuario.php");
+                    ejecutarServicio("http://192.168.0.21//ejemploBDRemota/insertar_usuario.php");
                    // clickRegister();
                     //prueba();
                 //}else{

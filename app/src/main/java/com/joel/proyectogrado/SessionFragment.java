@@ -100,7 +100,7 @@ public class SessionFragment extends Fragment implements Response.Listener<JSONO
         }
     }
     public void iniciarSession(String selectedUser){
-        String url="http://192.168.0.15//ejemploBDRemota/sesion.php?usu_usuario="+mTextInputEmail.getText().toString()+"&usu_password="+mTextInputPassword.getText().toString()+"&Rol="+selectedUser;
+        String url="http://192.168.0.21//ejemploBDRemota/sesion.php?usu_usuario="+mTextInputEmail.getText().toString()+"&usu_password="+mTextInputPassword.getText().toString()+"&Rol="+selectedUser;
         jrq=new JsonObjectRequest(Request.Method.GET,url,null,this,this);
         rq.add(jrq);
     }

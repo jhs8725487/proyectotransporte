@@ -159,9 +159,9 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
                     StartLocation();
                 }*/
                 //startRepeating();
-               // buscarConductores("http://192.168.0.15//ejemploBDRemota/buscar_conductor.php");
+               // buscarConductores("http://192.168.0.21//ejemploBDRemota/buscar_conductor.php");
                 StartLocation();
-                startRepeating();
+               // startRepeating();
                 //mMarker.remove();
             }
         });
@@ -264,8 +264,8 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         @Override
         public void run() {
             //Toast.makeText(MapClientActivity.this, "Patricia Escalera", Toast.LENGTH_SHORT).show();
-            buscarConductores("http://192.168.0.15//ejemploBDRemota/buscar_conductor.php");
-            mHandler.postDelayed(this, 7000);
+            buscarConductores("http://192.168.0.21//ejemploBDRemota/buscar_conductor.php");
+            mHandler.postDelayed(this, 5000);
         }
     };
 private void drawRoute(LatLng Origen, LatLng Destino){
@@ -418,9 +418,9 @@ private void drawRoute(LatLng Origen, LatLng Destino){
         } else if (item.getItemId() == R.id.editar_informacion) {
             Update();
         }else if(item.getItemId()== R.id.action_ruta){
-            showroute("http://192.168.0.15//ejemploBDRemota/mostrar_ruta.php");
+            showroute("http://192.168.0.21//ejemploBDRemota/mostrar_ruta.php");
         }else if(item.getItemId()==R.id.conductores_disponibles){
-           // buscarConductores("http://192.168.0.15//ejemploBDRemota/buscar_conductor.php");
+           // buscarConductores("http://192.168.0.21//ejemploBDRemota/buscar_conductor.php");
             startRepeating();
         }
         return super.onOptionsItemSelected(item);
