@@ -264,7 +264,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         @Override
         public void run() {
             //Toast.makeText(MapClientActivity.this, "Patricia Escalera", Toast.LENGTH_SHORT).show();
-            buscarConductores("http://192.168.0.21//ejemploBDRemota/buscar_conductor.php");
+            buscarConductores("https://agleam-money.000webhostapp.com/test/ejemploBDRemota/buscar_conductor.php");
             mHandler.postDelayed(this, 5000);
         }
     };
@@ -418,7 +418,7 @@ private void drawRoute(LatLng Origen, LatLng Destino){
         } else if (item.getItemId() == R.id.editar_informacion) {
             Update();
         }else if(item.getItemId()== R.id.action_ruta){
-            showroute("http://192.168.0.21//ejemploBDRemota/mostrar_ruta.php");
+            showroute("https://agleam-money.000webhostapp.com/test/ejemploBDRemota/mostrar_ruta.php");
         }else if(item.getItemId()==R.id.conductores_disponibles){
            // buscarConductores("http://192.168.0.21//ejemploBDRemota/buscar_conductor.php");
             startRepeating();

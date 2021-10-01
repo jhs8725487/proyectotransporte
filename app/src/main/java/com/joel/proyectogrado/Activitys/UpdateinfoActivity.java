@@ -71,15 +71,11 @@ public class UpdateinfoActivity extends AppCompatActivity {
 
         //mPref=getApplicationContext().getSharedPreferences("typeUser", MODE_PRIVATE);
         Mensaje= mPref.getString("Usuario","No existe");
-        buscarUsuario("http://192.168.0.21//ejemploBDRemota/buscar_usuario.php?idUsuario=" + Mensaje + "");
+        buscarUsuario("https://agleam-money.000webhostapp.com/test/ejemploBDRemota/buscar_usuario.php?idUsuario=" + Mensaje + "");
         mButonActualizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //imprimir();
-                //String Mensaje= mPref.getString("Usuario","No existe");
-                //buscarUsuario("http://192.168.0.15//ejemploBDRemota/buscar_usuario.php");
-                //buscarUsuario("http://192.168.0.15//ejemploBDRemota/buscar_usuario.php?idUsuario="+Mensaje+"");
-               ejecutarServicio("http://192.168.0.21//ejemploBDRemota/editar_usuario.php");
+                ejecutarServicio("https://agleam-money.000webhostapp.com/test/ejemploBDRemota/editar_usuario.php");
             }
         });
     }

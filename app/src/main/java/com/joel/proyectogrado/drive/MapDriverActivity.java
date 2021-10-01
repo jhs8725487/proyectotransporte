@@ -147,13 +147,13 @@ public class MapDriverActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mWithSpace=true;
-                Marcarestado("http://192.168.0.21//ejemploBDRemota/insertarestado.php");
+                Marcarestado("https://agleam-money.000webhostapp.com/test/ejemploBDRemota/insertarestado.php");
             }
         });
         mButtonwithoutspace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Marcarestado("http://192.168.0.21//ejemploBDRemota/insertarestado.php");
+                Marcarestado("https://agleam-money.000webhostapp.com/test/ejemploBDRemota/insertarestado.php");
             }
         });
     }
@@ -168,9 +168,9 @@ public class MapDriverActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (opciones[i].equals("Me dirijo al norte")){
-                    ejecutarServicio("http://192.168.0.21//ejemploBDRemota/insertargps.php?Camino="+"Norte");
+                    ejecutarServicio("https://agleam-money.000webhostapp.com/test/ejemploBDRemota/insertargps.php?Camino="+"Norte");
                 }else if (opciones[i].equals("Me dirijo al sud")){
-                    ejecutarServicio("http://192.168.0.21//ejemploBDRemota/insertargps.php?Camino="+"Sud");
+                    ejecutarServicio("https://agleam-money.000webhostapp.com/test/ejemploBDRemota/insertargps.php?Camino="+"Sud");
                 }else{
                     dialogInterface.dismiss();
                 }
@@ -181,7 +181,7 @@ public class MapDriverActivity extends AppCompatActivity {
         alertOpciones.show();
     }
     public void prueba(){
-        ejecutarServicio("http://192.168.0.21//ejemploBDRemota/insertargps.php");
+        ejecutarServicio("https://agleam-money.000webhostapp.com/test/ejemploBDRemota/insertargps.php");
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
