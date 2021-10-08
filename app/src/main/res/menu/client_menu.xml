@@ -12,8 +12,10 @@
     <item android:id="@+id/conductores_disponibles"
         android:title="Ver conductores disponibles"
         app:showAsAction="never" />
+    <item android:id="@+id/conductores_cercanos"
+        android:title="Ver conductores cercanos"
+        app:showAsAction="never" />
     <item android:id="@+id/action_logout"
         android:title="Cerrar sesion"
         app:showAsAction="never" />
-
 </menu>

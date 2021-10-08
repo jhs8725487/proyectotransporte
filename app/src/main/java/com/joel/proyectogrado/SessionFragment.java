@@ -1,6 +1,9 @@
 package com.joel.proyectogrado;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -27,6 +30,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import dmax.dialog.SpotsDialog;
+
 
 public class SessionFragment extends Fragment implements Response.Listener<JSONObject>, Response.ErrorListener{
     RequestQueue rq;
@@ -35,7 +40,8 @@ public class SessionFragment extends Fragment implements Response.Listener<JSONO
     TextInputEditText mTextInputPassword;
     Button mButtonLogin;
     String selectedUser;
-
+    SharedPreferences mPref;
+    AlertDialog mDialog;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -45,6 +51,8 @@ public class SessionFragment extends Fragment implements Response.Listener<JSONO
         View vista=inflater.inflate(R.layout.fragment_session,container,false);
         mTextInputEmail=(TextInputEditText) vista.findViewById(R.id.textInputEmail);
         mTextInputPassword=(TextInputEditText) vista.findViewById(R.id.textInputPassword);
+        mPref= getContext().getSharedPreferences("typeUser", Context.MODE_PRIVATE);
+        mDialog=new SpotsDialog.Builder().setContext(getContext()).setMessage("Espere un momento").build();
         mButtonLogin=(Button) vista.findViewById(R.id.btnLogin);
         rq= Volley.newRequestQueue(getContext());
         if (getArguments()!=null){
@@ -63,13 +71,13 @@ public class SessionFragment extends Fragment implements Response.Listener<JSONO
     @Override
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getContext(), "No se ha encontrado al usuario", Toast.LENGTH_SHORT).show();
+        mDialog.dismiss();
     }
 
     @Override
     public void onResponse(JSONObject response) {
         Usuario user=new Usuario();
         Toast.makeText(getContext(), "Se ha encontrado al usuario "+mTextInputEmail.getText().toString(), Toast.LENGTH_SHORT).show();
-
         JSONArray jsonArray=response.optJSONArray("datos");
         JSONObject jsonObject=null;
         try {
@@ -88,11 +96,16 @@ public class SessionFragment extends Fragment implements Response.Listener<JSONO
             if (selectedUser.equals("Cliente")) {
                 Intent intent = new Intent(getContext(), MapClientActivity.class);
                 intent.putExtra(MapClientActivity.nombres, user.getId());
+                mDialog.dismiss();
                 startActivity(intent);
 
             } else if (selectedUser.equals("Conductor")) {
                 Intent intent = new Intent(getContext(), MapDriverActivity.class);
                 intent.putExtra(MapDriverActivity.nombres, user.getId());
+                SharedPreferences.Editor editor=mPref.edit();
+                editor.putString("usuario",user.getNombre());
+                editor.apply();
+                mDialog.dismiss();
                 startActivity(intent);
             }
         }else {
@@ -100,6 +113,7 @@ public class SessionFragment extends Fragment implements Response.Listener<JSONO
         }
     }
     public void iniciarSession(String selectedUser){
+        mDialog.show();
         String url="https://agleam-money.000webhostapp.com/test/ejemploBDRemota/sesion.php?usu_usuario="+mTextInputEmail.getText().toString()+"&usu_password="+mTextInputPassword.getText().toString()+"&Rol="+selectedUser;
         jrq=new JsonObjectRequest(Request.Method.GET,url,null,this,this);
         rq.add(jrq);

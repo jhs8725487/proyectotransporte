@@ -96,6 +96,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
     private List<LatLng> mPolylineList;
     public double Latitud=-17.4135865, Longitud=-66.156731219;
     public int User;
+    private boolean bandera2=false;
     private PolylineOptions mPolylineOptions;
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
@@ -161,6 +162,9 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
                 //startRepeating();
                // buscarConductores("http://192.168.0.21//ejemploBDRemota/buscar_conductor.php");
                 StartLocation();
+                float distance=getDistance(-17.364125049723953, -66.16491241068421,-17.37355231490963, -66.128989668393);
+                Toast.makeText(MapClientActivity.this, distance+"", Toast.LENGTH_SHORT).show();
+
                // startRepeating();
                 //mMarker.remove();
             }
@@ -174,13 +178,36 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
                 if(marker.getTag().equals(Usuario)){
                     /*marker.remove();
                     mDriversMarkers.remove(marker);*/
-                    marker.setPosition(new LatLng(latitud,longitud));
-                    if (Disponibilidad.equals("0")){
+                    if (bandera2==true) {
+                        float distance=getDistance( -17.36567666429554,-66.15925870045132,latitud,longitud);
+                        if (distance < 1000) {
+                            marker.setPosition(new LatLng(latitud, longitud));
+                        }
+                        if (distance > 1000) {
+                            if (marker.getTag() != null) {
+                                if (marker.getTag().equals(Usuario)) {
+                                    marker.remove();
+                                    mDriversMarkers.remove(marker);
+                                    Toast.makeText(MapClientActivity.this, "Desconectando...", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                            }
+                        }
+                    }else{
+                        marker.setPosition(new LatLng(latitud, longitud));
+                    }
+                    if (Disponibilidad.equals("0") && Camino.equals("Norte")){
                         marker.setTitle("Sin espacio "+Camino);
-                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.redcar));
+                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.redcarn));
+                    }else if(Disponibilidad.equals("0") && Camino.equals("Sud")){
+                        marker.setTitle("Con espacio "+Camino);
+                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.redcars));
+                    }else if(Disponibilidad.equals("1") && Camino.equals("Norte")){
+                        marker.setTitle("Con espacio "+Camino);
+                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.greencarn));
                     }else{
                         marker.setTitle("Con espacio "+Camino);
-                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.greencar));
+                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.greencars));
                     }
                     //mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Conductor disponible").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_car)));
                     //Toast.makeText(MapClientActivity.this, marker.getPosition()+"", Toast.LENGTH_SHORT).show();
@@ -193,10 +220,20 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
     }
     public void InsertCoordinates(double latitud, double longitud, int Usuario){
         LatLng driverLatLng = new LatLng(latitud, longitud);
-        Marker marker = mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Conductor disponible").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_car)));
+        float distance=getDistance( -17.36567666429554,-66.15925870045132,latitud,longitud);
+        if (distance<1000 && bandera2==true) {
+            Marker marker = mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Conductor disponible").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_car)));
+            marker.setTag(Usuario);
+            mDriversMarkers.add(marker);
+        }else if(bandera2==false){
+            Marker marker = mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Conductor disponible").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_car)));
+            marker.setTag(Usuario);
+            mDriversMarkers.add(marker);
+        }
+       /* Marker marker = mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Conductor disponible").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_car)));
         marker.setTag(Usuario);
         mDriversMarkers.add(marker);
-        Toast.makeText(MapClientActivity.this, "Insertando...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MapClientActivity.this, "Insertando...", Toast.LENGTH_SHORT).show();*/
     }
     public boolean bandera(int Usuario){
         for(Marker marker: mDriversMarkers){
@@ -263,7 +300,6 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
     private Runnable mToastRunnable= new Runnable() {
         @Override
         public void run() {
-            //Toast.makeText(MapClientActivity.this, "Patricia Escalera", Toast.LENGTH_SHORT).show();
             buscarConductores("https://agleam-money.000webhostapp.com/test/ejemploBDRemota/buscar_conductor.php");
             mHandler.postDelayed(this, 5000);
         }
@@ -296,6 +332,20 @@ private void drawRoute(LatLng Origen, LatLng Destino){
 
             }
         });
+}
+private float getDistance(double deviceLatitude, double deviceLongitude, double rLatitude, double rLongitude){
+    //Device Location
+   //Location locationDevice=new Location();
+    Location locationDevice = new Location("Android Device Location.");
+    locationDevice.setLatitude(deviceLatitude);
+    locationDevice.setLongitude(deviceLongitude);
+    //location to compare
+    //Location locationValue=new Location();
+    Location locationValue = new Location("location value.");
+    locationValue.setLatitude(rLatitude);
+    locationValue.setLongitude(rLongitude);
+    //distance to
+    return locationDevice.distanceTo(locationValue);
 }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -420,7 +470,10 @@ private void drawRoute(LatLng Origen, LatLng Destino){
         }else if(item.getItemId()== R.id.action_ruta){
             showroute("https://agleam-money.000webhostapp.com/test/ejemploBDRemota/mostrar_ruta.php");
         }else if(item.getItemId()==R.id.conductores_disponibles){
-           // buscarConductores("http://192.168.0.21//ejemploBDRemota/buscar_conductor.php");
+            this.bandera2=false;
+            startRepeating();
+        }else if(item.getItemId()==R.id.conductores_cercanos){
+            this.bandera2=true;
             startRepeating();
         }
         return super.onOptionsItemSelected(item);

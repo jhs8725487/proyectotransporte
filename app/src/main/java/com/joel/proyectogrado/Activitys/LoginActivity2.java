@@ -1,7 +1,9 @@
 package com.joel.proyectogrado.Activitys;
 
+
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -14,6 +16,7 @@ import include.MyToolbar;
 public class LoginActivity2 extends AppCompatActivity {
     SessionFragment sessionFragment;
     SharedPreferences mPref;
+    AlertDialog mDialog;
     Bundle miBundle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

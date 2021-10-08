@@ -89,52 +89,36 @@
         android:orientation="vertical">
     <Button
         android:id="@+id/btnEnruta"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="CONECTARSE"
-        android:layout_gravity="top"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:text="@string/textformat"
+        android:textSize="25sp"
+        android:layout_gravity="center"
+        android:textStyle="bold|italic"
         android:layout_margin="10dp"
         android:textColor="@color/ColorWhite"
-        android:background="@drawable/rounded_button"
-        android:backgroundTint="@color/DarkColorPrimary">
+        android:background="@drawable/customcircle">
 
     </Button>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="450dp"
+        android:layout_marginTop="550dp"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
     <Button
         android:id="@+id/btnConEspacio"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:text="CON ESPACIO"
         android:layout_gravity="bottom"
-        android:layout_margin="10dp"
+        android:layout_margin="30dp"
+        android:textStyle="bold|italic"
         android:textColor="@color/ColorWhite"
-        android:background="@drawable/rounded_button"
-        android:backgroundTint="@color/DarkColorPrimary">
-
-    </Button>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_marginTop="550dp"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-    <Button
-        android:id="@+id/btnSinEspacio"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="SIN ESPACIO"
-        android:layout_gravity="bottom"
-        android:layout_margin="10dp"
-        android:textColor="@color/ColorWhite"
-        android:background="@drawable/rounded_button"
-        android:backgroundTint="@color/DarkColorPrimary">
+        android:textSize="30sp"
+        android:background="@drawable/customrectangle">
 
     </Button>
     </LinearLayout>

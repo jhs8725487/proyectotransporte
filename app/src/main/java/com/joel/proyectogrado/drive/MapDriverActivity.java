@@ -1,5 +1,6 @@
 package com.joel.proyectogrado.drive;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +13,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -115,7 +120,6 @@ public class MapDriverActivity extends AppCompatActivity {
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
         mButtonConnect=findViewById(R.id.btnEnruta);
         mButtonwithspace=findViewById(R.id.btnConEspacio);
-        mButtonwithoutspace=findViewById(R.id.btnSinEspacio);
         mGeoFireProvider=new GeofireProvider();
         mLocationRequest=new LocationRequest();
         mLocationRequest.setInterval(1000);
@@ -129,15 +133,19 @@ public class MapDriverActivity extends AppCompatActivity {
         //mPref=getApplicationContext().getSharedPreferences("typeUser", MODE_PRIVATE);
         mPref= getSharedPreferences("typeUser",Context.MODE_PRIVATE);
         String usuario=getIntent().getStringExtra("names");
-        cajaBienvenido.setText("BIENVENIDO "+usuario);
+        String nombreUser=mPref.getString("usuario","");
+        cajaBienvenido.setText("BIENVENIDO : "+nombreUser);
         mButtonConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mIsconnect){
                     disconect();
                     prueba();
+                    mButtonConnect.setBackgroundResource(R.drawable.customcircle);
+                    mButtonConnect.setText("ENTRAR "+"\r\n"+"EN "+"\r\n"+"RUTA");
                 }else{
                     //StartLocation();
+                    mButtonConnect.setBackgroundResource(R.drawable.button_pressed);
                     Direccion();
                     //prueba();
                 }
@@ -146,14 +154,19 @@ public class MapDriverActivity extends AppCompatActivity {
         mButtonwithspace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mWithSpace=true;
-                Marcarestado("https://agleam-money.000webhostapp.com/test/ejemploBDRemota/insertarestado.php");
-            }
-        });
-        mButtonwithoutspace.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Marcarestado("https://agleam-money.000webhostapp.com/test/ejemploBDRemota/insertarestado.php");
+                if (!mWithSpace) {
+                    Drawable dr =getResources().getDrawable(R.drawable.customrectangle);
+                    dr.setColorFilter(Color.parseColor("#DE2C18"), PorterDuff.Mode.SRC_ATOP);
+                    mButtonwithspace.setText("Sin espacio");
+                    mButtonwithspace.setBackgroundDrawable(dr);
+                    mWithSpace=true;
+                    Marcarestado("https://agleam-money.000webhostapp.com/test/ejemploBDRemota/insertarestado.php");
+                }else{
+                    mWithSpace=false;
+                    mButtonwithspace.setText("Con espacio");
+                    mButtonwithspace.setBackgroundResource(R.drawable.customrectangle);
+                    Marcarestado("https://agleam-money.000webhostapp.com/test/ejemploBDRemota/insertarestado.php");
+                }
             }
         });
     }
@@ -392,7 +405,7 @@ public class MapDriverActivity extends AppCompatActivity {
                 if (mWithSpace==true){
                     parametros.put("idUsuario", usuario);
                     parametros.put("Disponibilidad", "1");
-                    mWithSpace=false;
+                   // mWithSpace=false;
                 }else {
                     parametros.put("idUsuario", usuario);
                     parametros.put("Disponibilidad", "0");
