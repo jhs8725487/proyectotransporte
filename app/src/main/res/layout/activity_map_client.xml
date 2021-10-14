@@ -16,10 +16,10 @@
         />
 
     <Button
-        android:id="@+id/btnConnect"
+        android:id="@+id/btnRequestNow"
        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="CONECTARSE"
+        android:text="PROGRAMAR VIAJE"
         android:layout_gravity="bottom"
         android:layout_margin="10dp"
         android:textColor="@color/ColorWhite"

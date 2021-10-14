@@ -82,7 +82,7 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
     private final static int SETTINGS_REQUEST_CODE = 2;
     private Marker mMarker;
     private Handler mHandler=new Handler();
-    private Button mButtonConnect;
+    private Button mButtonRequest;
     private boolean mIsconnect=false;
     public static final String nombres="names";
     private List<Marker> mDriversMarkers=new ArrayList<>();
@@ -148,27 +148,21 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
 
         mGoogleApiProvider = new GoogleApiProvider(MapClientActivity.this);
 
-        mButtonConnect=findViewById(R.id.btnConnect);
+        mButtonRequest=findViewById(R.id.btnRequestNow);
         //mAuthProvider=new AuthProvider();
        // mGeoFireProvider=new GeofireProvider();
-        mButtonConnect.setOnClickListener(new View.OnClickListener() {
+        mButtonRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               /* if (mIsconnect){
-                    disconect();
-                }else{
-                    StartLocation();
-                }*/
-                //startRepeating();
-               // buscarConductores("http://192.168.0.21//ejemploBDRemota/buscar_conductor.php");
-                StartLocation();
-                float distance=getDistance(-17.364125049723953, -66.16491241068421,-17.37355231490963, -66.128989668393);
-                Toast.makeText(MapClientActivity.this, distance+"", Toast.LENGTH_SHORT).show();
-
-               // startRepeating();
-                //mMarker.remove();
+             goToRequestDriver();
             }
         });
+    }
+
+    private void goToRequestDriver() {
+        Intent intent=new Intent(MapClientActivity.this,RequestDriverActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     public void UpdateCoordinates(double latitud, double longitud, int Usuario, String Disponibilidad, String Camino){
@@ -230,10 +224,6 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
             marker.setTag(Usuario);
             mDriversMarkers.add(marker);
         }
-       /* Marker marker = mMap.addMarker(new MarkerOptions().position(driverLatLng).title("Conductor disponible").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_car)));
-        marker.setTag(Usuario);
-        mDriversMarkers.add(marker);
-        Toast.makeText(MapClientActivity.this, "Insertando...", Toast.LENGTH_SHORT).show();*/
     }
     public boolean bandera(int Usuario){
         for(Marker marker: mDriversMarkers){
@@ -334,8 +324,7 @@ private void drawRoute(LatLng Origen, LatLng Destino){
         });
 }
 private float getDistance(double deviceLatitude, double deviceLongitude, double rLatitude, double rLongitude){
-    //Device Location
-   //Location locationDevice=new Location();
+
     Location locationDevice = new Location("Android Device Location.");
     locationDevice.setLatitude(deviceLatitude);
     locationDevice.setLongitude(deviceLongitude);
@@ -402,7 +391,7 @@ private float getDistance(double deviceLatitude, double deviceLongitude, double 
         return isActive;
     }
     private void  disconect(){
-        mButtonConnect.setText("Conectarse");
+        //mButtonConnect.setText("Conectarse");
         mIsconnect=false;
         if (mFusedLocation!=null){
             mFusedLocation.removeLocationUpdates(mLocationCallback);
@@ -412,7 +401,7 @@ private float getDistance(double deviceLatitude, double deviceLongitude, double 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 if (gpsActive()) {
-                    mButtonConnect.setText("Desconectarse");
+                  //  mButtonConnect.setText("Desconectarse");
                     mIsconnect=true;
                     mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
                     mMap.setMyLocationEnabled(false);
@@ -499,17 +488,17 @@ private float getDistance(double deviceLatitude, double deviceLongitude, double 
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
-        /*if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
-        }*/
-        //mMap.setMyLocationEnabled(true);
+        }
+       // mMap.setMyLocationEnabled(false);
         mLocationRequest=new LocationRequest();
         mLocationRequest.setInterval(1000);
         mLocationRequest.setFastestInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setSmallestDisplacement(5);
 
-        //StartLocation();
+        StartLocation();
     }
     public void buscarConductores(String URL){
 
