@@ -56,18 +56,9 @@ public class RequestDriverActivity extends AppCompatActivity {
     private boolean mIsconnect=false;
     public static final String nombres="names";
     private List<Marker> mDriversMarkers=new ArrayList<>();
-    private LatLng mCurrentLatLng;
-    private boolean mIsFirstTime=true;
     RequestQueue requestQueue;
-    private LatLng  mOriginLatLng;
-    private LatLng mDestinationLatLng;
     SharedPreferences mPref;
-    private GoogleApiProvider mGoogleApiProvider;
-    private List<LatLng> mPolylineList;
     public double Latitud=-17.4135865, Longitud=-66.156731219;
-    public int User;
-    private boolean bandera2=false;
-    private PolylineOptions mPolylineOptions;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,18 +69,6 @@ public class RequestDriverActivity extends AppCompatActivity {
         mAnimation.playAnimation();
         buscarConductores("https://agleam-money.000webhostapp.com/test/ejemploBDRemota/buscar_conductor.php");
 
-    }
-    public void closestDriver(ArrayList<Float> distanceDrivers){
-        float menor=distanceDrivers.get(0);
-        for(int i=0; i<distanceDrivers.size(); i++){
-            if ( distanceDrivers.get(i)<menor){
-               menor=distanceDrivers.get(i);
-            }
-        }
-        Toast.makeText(RequestDriverActivity.this, menor+" ", Toast.LENGTH_SHORT).show();
-        Intent intent=new Intent(RequestDriverActivity.this, MapClientBookingActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     private float getDistance(double deviceLatitude, double deviceLongitude, double rLatitude, double rLongitude){
@@ -111,6 +90,8 @@ public class RequestDriverActivity extends AppCompatActivity {
             @Override
             public void onResponse(JSONArray response) {
                 JSONObject jsonObject = null;
+                int usuario2=0;
+                float menor=0;
                 ArrayList<Double> Lat2;
                 ArrayList <Double>Long2;
                 ArrayList <Integer>Usuario;
@@ -136,19 +117,24 @@ public class RequestDriverActivity extends AppCompatActivity {
                         Long2.add(jsonObject.getDouble("Longitud"));
                         if(Estado.get(i).equals("1")) {
                             float distance = getDistance(-17.36567666429554, -66.15925870045132, Lat2.get(i), Long2.get(i));
-                           //if (distance < 1000) {
-                                Distancedrivers.add(distance);
-                            //Toast.makeText(RequestDriverActivity.this, "Hola mundo", Toast.LENGTH_SHORT).show();
-                            //}
+                            if (i==0){
+                                menor=distance;
+                                usuario2=Usuario.get(i);
+                            }
+                            if(distance<menor) {
+                                menor = distance;
+                                usuario2=Usuario.get(i);
+                            }
                         }
-                        //registroCoordenadas(Lat2.get(i),Long2.get(i),Usuario.get(i),Estado.get(i),Disponibilidad.get(i),Camino.get(i));
                     } catch (JSONException e) {
 
-                        //Toast.makeText(RequestDriverActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RequestDriverActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
-                closestDriver(Distancedrivers);
-               // Toast.makeText(RequestDriverActivity.this, Distancedrivers.size()+"", Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(RequestDriverActivity.this, MapClientBookingActivity.class);
+                intent.putExtra("usuario",usuario2+"");
+                startActivity(intent);
+                finish();
             }
         }, new com.android.volley.Response.ErrorListener() {
             @Override
