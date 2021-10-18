@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -15,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProyectoGrado"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".client.NotificationBookingActivityActivity"
+            android:exported="true" />
         <activity
             android:name=".client.MapClientBookingActivity"
             android:exported="true" />
