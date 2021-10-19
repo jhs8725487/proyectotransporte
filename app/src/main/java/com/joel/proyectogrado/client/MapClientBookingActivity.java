@@ -396,13 +396,17 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
         float distance = getDistance(mCurrentLatLng.latitude, mCurrentLatLng.longitude, RouteiLatLng.latitude, RoutefLatLng.longitude);
                 if (distance<=1000 && !bandera2){
                     createNotficationChanel();
+                    Intent resultIntent =new Intent(this,NotificationBookingActivityActivity.class);
+                    PendingIntent resultPendingIntent=PendingIntent.getActivity(this,1,resultIntent,PendingIntent.FLAG_UPDATE_CURRENT);
                     NotificationCompat.Builder builder= new NotificationCompat.Builder(MapClientBookingActivity.this,"ubberClone")
+
                             .setSmallIcon(R.drawable.ic_launcher_background)
                             .setContentTitle("LINEA 111")
                             .setContentText("TU TRANSPORTE SE ENCUENTRA A 1 KILOMETRO")
                             .setAutoCancel(true)
                             .setDefaults(NotificationCompat.DEFAULT_ALL)
-                            .setPriority(NotificationCompat.PRIORITY_HIGH);
+                            .setPriority(NotificationCompat.PRIORITY_HIGH)
+                            .setContentIntent(resultPendingIntent);
 
                     NotificationManagerCompat notificationManagerCompat =NotificationManagerCompat.from(MapClientBookingActivity.this);
                     notificationManagerCompat.notify(123, builder.build());
