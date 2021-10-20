@@ -10,6 +10,7 @@ android {
         applicationId "com.joel.proyectogrado"
         minSdkVersion 17
         targetSdkVersion 29
+        multiDexEnabled true
         versionCode 1
         versionName "1.0"
 
@@ -48,6 +49,9 @@ dependencies {
     implementation 'com.airbnb.android:lottie:2.8.0'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.4.0'
+    implementation 'com.google.android.libraries.places:places:2.5.0'
+    implementation 'com.google.maps.android:android-maps-utils:2.2.3'
+    implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
 }
 apply plugin: 'com.google.gms.google-services'

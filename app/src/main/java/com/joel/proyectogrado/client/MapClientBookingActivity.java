@@ -95,6 +95,8 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
     private TextView mTextViewEmailClientBooking;
     private TextView mtextviewPhoneClientBooking;
     private TextView mtextviewAvailableBooking;
+    private TextView mtextviewTime;
+    private TextView mtextviewDistance;
     boolean bandera=false, bandera2=false;
     private TextView mtextviewAdressBooking;
     LocationCallback mLocationCallback = new LocationCallback() {
@@ -145,6 +147,8 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
         mTextViewClientBooking=findViewById(R.id.textviewClientBooking);
         mtextviewPhoneClientBooking=findViewById(R.id.textviewPhoneClientBooking);
         mtextviewAvailableBooking=findViewById(R.id.textviewAvailableBooking);
+        mtextviewTime=findViewById(R.id.textviewTime);
+        mtextviewDistance=findViewById(R.id.textviewDistance);
         mGoogleApiProvider = new GoogleApiProvider(MapClientBookingActivity.this);
         buscarUsuario("https://agleam-money.000webhostapp.com/test/ejemploBDRemota/buscar_usuario.php?idUsuario=" + usuario + "");
         //findDriver("https://agleam-money.000webhostapp.com/test/ejemploBDRemota/buscar_idconductor.php?idUsuario=" + usuario +"");
@@ -336,6 +340,14 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
                         mPolylineOptions.jointType(JointType.ROUND);
                         mPolylineOptions.addAll(mPolylineList);
                         polylineFinal=mMap.addPolyline(mPolylineOptions);
+                        JSONArray legs=route.getJSONArray("legs");
+                        JSONObject leg=legs.getJSONObject(0);
+                        JSONObject distance=leg.getJSONObject("distance");
+                        JSONObject duration=leg.getJSONObject("duration");
+                        String distanceText=distance.getString("text");
+                        String duracionText=duration.getString("text");
+                        mtextviewTime.setText(duracionText);
+                        mtextviewDistance.setText(distanceText);
                     } catch (Exception e) {
                         Log.d("error", "error encontrado" + e.getMessage());
                     }
