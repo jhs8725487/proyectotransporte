@@ -131,8 +131,17 @@ public class RequestDriverActivity extends AppCompatActivity {
                         Toast.makeText(RequestDriverActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
+                double mLatitude =getIntent().getDoubleExtra("mOriginLat",0);
+                double mLongitude=getIntent().getDoubleExtra("mOriginLong",0);
+                double mLatitude2=getIntent().getDoubleExtra("mDestinationLat",0);
+                double mLongitude2=getIntent().getDoubleExtra("mDestinationLong",0);
+                //Toast.makeText(RequestDriverActivity.this, mLatitude+" "+mLongitude, Toast.LENGTH_SHORT).show();
                 Intent intent=new Intent(RequestDriverActivity.this, MapClientBookingActivity.class);
                 intent.putExtra("usuario",usuario2+"");
+                intent.putExtra("mLatitude",mLatitude);
+                intent.putExtra("mLongitude",mLongitude);
+                intent.putExtra("mLatitude2",mLatitude2);
+                intent.putExtra("mLongitude2",mLongitude2);
                 startActivity(intent);
                 finish();
             }

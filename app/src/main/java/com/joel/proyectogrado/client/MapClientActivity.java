@@ -67,6 +67,7 @@ import com.joel.proyectogrado.Activitys.UpdateinfoActivity;
 
 import com.joel.proyectogrado.Activitys.MainActivity;
 import com.joel.proyectogrado.drive.ConductorActivo;
+import com.joel.proyectogrado.drive.MapDriverActivity;
 import com.joel.proyectogrado.providers.GoogleApiProvider;
 import com.joel.proyectogrado.utils.DecodePoints;
 
@@ -188,10 +189,63 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
         mAutocompleteDestination.setCountry("BOL");
         mAutocompleteDestination.setLocationBias(RectangularBounds.newInstance(northSide,sudSide));
     }
-    private void goToRequestDriver() {
-        Intent intent=new Intent(MapClientActivity.this,RequestDriverActivity.class);
-        startActivity(intent);
-        finish();
+    /*private void goToRequestDriver() {
+        if (mOriginLatLng2!=null && mDestinationLatLng !=null) {
+            Intent intent = new Intent(MapClientActivity.this, RequestDriverActivity.class);
+            intent.putExtra("mOriginLat", mOriginLatLng2.latitude);
+            intent.putExtra("mOriginLong", mOriginLatLng2.longitude);
+            intent.putExtra("mDestinationLat",mDestinationLatLng.latitude);
+            intent.putExtra("mDestinationLong",mDestinationLatLng.longitude);
+            startActivity(intent);
+            finish();
+        }else{
+            Toast.makeText(MapClientActivity.this, "Elije un lugar de recojida", Toast.LENGTH_SHORT).show();
+        }
+    }*/
+    public void goToRequestDriver(){
+        //flag=true;
+        final CharSequence[] opciones={"Me dirijo al norte", "Me dirijo al sud"};
+        Boolean bandera=true;
+        final AlertDialog.Builder alertOpciones= new AlertDialog.Builder(MapClientActivity.this);
+        alertOpciones.setTitle("Hacia donde se dirije?");
+        alertOpciones.setItems(opciones, new DialogInterface.OnClickListener() {
+            String usuario=getIntent().getStringExtra("names");
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (opciones[i].equals("Me dirijo al norte")){
+                    if (mOriginLatLng2!=null && mDestinationLatLng !=null) {
+                        Intent intent = new Intent(MapClientActivity.this, RequestDriverActivity.class);
+                        intent.putExtra("mOriginLat", mOriginLatLng2.latitude);
+                        intent.putExtra("mOriginLong", mOriginLatLng2.longitude);
+                        intent.putExtra("mDestinationLat",mDestinationLatLng.latitude);
+                        intent.putExtra("mDestinationLong",mDestinationLatLng.longitude);
+                        startActivity(intent);
+                        finish();
+                    }else{
+                        Toast.makeText(MapClientActivity.this, "Elije un lugar de recojida", Toast.LENGTH_SHORT).show();
+                    }
+                    //ejecutarServicio("https://agleam-money.000webhostapp.com/test/ejemploBDRemota/insertargps.php?Camino="+"Norte");
+                }else if (opciones[i].equals("Me dirijo al sud")){
+                    if (mOriginLatLng2!=null && mDestinationLatLng !=null) {
+                        Intent intent = new Intent(MapClientActivity.this, RequestDriverActivity.class);
+                        intent.putExtra("mOriginLat", mOriginLatLng2.latitude);
+                        intent.putExtra("mOriginLong", mOriginLatLng2.longitude);
+                        intent.putExtra("mDestinationLat",mDestinationLatLng.latitude);
+                        intent.putExtra("mDestinationLong",mDestinationLatLng.longitude);
+                        startActivity(intent);
+                        finish();
+                    }else{
+                        Toast.makeText(MapClientActivity.this, "Elije un lugar de recojida", Toast.LENGTH_SHORT).show();
+                    }
+                    //ejecutarServicio("https://agleam-money.000webhostapp.com/test/ejemploBDRemota/insertargps.php?Camino="+"Sud");
+                }else{
+                    dialogInterface.dismiss();
+                }
+                //StartLocation();
+                //prueba();
+            }
+        });
+        alertOpciones.show();
     }
     private void onCameraMove(){
         mCameraListener=new GoogleMap.OnCameraIdleListener() {

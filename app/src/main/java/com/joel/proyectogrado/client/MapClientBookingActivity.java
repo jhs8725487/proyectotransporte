@@ -32,6 +32,7 @@ import android.os.Looper;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -97,7 +98,9 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
     private TextView mtextviewAvailableBooking;
     private TextView mtextviewTime;
     private TextView mtextviewDistance;
-    boolean bandera=false, bandera2=false;
+    private LatLng mOriginLatLong, mDestinationLatLong;
+    private Button mButtonStartTravel;
+    boolean bandera=false, bandera2=false, bandera3=false;
     private TextView mtextviewAdressBooking;
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
@@ -105,17 +108,17 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
             for (Location location : locationResult.getLocations()) {
                 if (getApplicationContext() != null) {
 
-                    if (mMarker2 != null){
+                    /*if (mMarker2 != null){
                         mMarker2.remove();
 
-                    }
-                    mCurrentLatLng=new LatLng(location.getLatitude(),location.getLongitude());
-                    mMarker2=mMap.addMarker(new MarkerOptions().position(
+                    }*/
+                    //mCurrentLatLng=new LatLng(location.getLatitude(),location.getLongitude());
+                    /*mMarker2=mMap.addMarker(new MarkerOptions().position(
                             new LatLng(location.getLatitude(), location.getLongitude())
                     )
                             .title("Tu posicion")
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.iconuser))
-                    );
+                    );*/
                     //OBTENER LA LOCALIZACION DEL USUARIO EN TIEMPO REAL
                     mMap.moveCamera(CameraUpdateFactory.newCameraPosition(
                             new CameraPosition.Builder()
@@ -149,11 +152,25 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
         mtextviewAvailableBooking=findViewById(R.id.textviewAvailableBooking);
         mtextviewTime=findViewById(R.id.textviewTime);
         mtextviewDistance=findViewById(R.id.textviewDistance);
+        mButtonStartTravel=findViewById(R.id.btnStartBooking);
+        double mLatitude =getIntent().getDoubleExtra("mLatitude",0);
+        double mLongitude=getIntent().getDoubleExtra("mLongitude",0);
+        double mLatitude2=getIntent().getDoubleExtra("mLatitude2",0);
+        double mLongitude2=getIntent().getDoubleExtra("mLongitude2",0);
+        mOriginLatLong=new LatLng(mLatitude,mLongitude);
+        mDestinationLatLong=new LatLng(mLatitude2,mLongitude2);
         mGoogleApiProvider = new GoogleApiProvider(MapClientBookingActivity.this);
         buscarUsuario("https://agleam-money.000webhostapp.com/test/ejemploBDRemota/buscar_usuario.php?idUsuario=" + usuario + "");
         //findDriver("https://agleam-money.000webhostapp.com/test/ejemploBDRemota/buscar_idconductor.php?idUsuario=" + usuario +"");
         Toast.makeText(MapClientBookingActivity.this, usuario+" ", Toast.LENGTH_SHORT).show();
         startRepeating();
+        mButtonStartTravel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mMap.addMarker(new MarkerOptions().position(mDestinationLatLong).title("Lugar de destino").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_pin_blue)));
+                bandera3=true;
+            }
+        });
 
        // mPref= getSharedPreferences("typeUser", Context.MODE_PRIVATE);
         //String usuario=getIntent().getStringExtra("names");
@@ -183,7 +200,7 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.getUiSettings().setZoomControlsEnabled(true);
-
+            mMap.addMarker(new MarkerOptions().position(mOriginLatLong).title("Lugar de recojida").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_pin_red)));
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
@@ -193,7 +210,6 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
         mLocationRequest.setFastestInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setSmallestDisplacement(5);
-
         StartLocation();
     }
     @Override
@@ -397,44 +413,88 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
                     }
 
 
-                if(bandera ){
+                if(bandera && mOriginLatLong!=null && !bandera3 ){
                     polylineFinal.remove();
-                    drawRoute(mCurrentLatLng, RoutefLatLng);
+                    drawRoute(mOriginLatLong, RoutefLatLng);
+                }else if(bandera && mOriginLatLong!=null ){
+                    polylineFinal.remove();
+                    drawRoute(mDestinationLatLong, RoutefLatLng);
                 }
-                if(!bandera) {
-                    drawRoute(mCurrentLatLng, RoutefLatLng);
+                if(!bandera && mOriginLatLong!=null && !bandera3) {
+                    drawRoute(mOriginLatLong, RoutefLatLng);
+                    bandera=true;
+                }else if(!bandera && mOriginLatLong!=null){
+                    drawRoute(mDestinationLatLong, RoutefLatLng);
                     bandera=true;
                 }
-        float distance = getDistance(mCurrentLatLng.latitude, mCurrentLatLng.longitude, RouteiLatLng.latitude, RoutefLatLng.longitude);
-                if (distance<=1000 && !bandera2){
-                    createNotficationChanel();
-                    Intent resultIntent =new Intent(this,NotificationBookingActivityActivity.class);
-                    PendingIntent resultPendingIntent=PendingIntent.getActivity(this,1,resultIntent,PendingIntent.FLAG_UPDATE_CURRENT);
-                    NotificationCompat.Builder builder= new NotificationCompat.Builder(MapClientBookingActivity.this,"ubberClone")
+                if (!bandera3) {
+                    float distance = getDistance(mOriginLatLong.latitude, mOriginLatLong.longitude, RouteiLatLng.latitude, RoutefLatLng.longitude);
 
-                            .setSmallIcon(R.drawable.ic_launcher_background)
-                            .setContentTitle("LINEA 111")
-                            .setContentText("TU TRANSPORTE SE ENCUENTRA A 1 KILOMETRO")
-                            .setAutoCancel(true)
-                            .setDefaults(NotificationCompat.DEFAULT_ALL)
-                            .setPriority(NotificationCompat.PRIORITY_HIGH)
-                            .setContentIntent(resultPendingIntent);
+                    if (distance <= 1000 && !bandera2) {
+                        createNotficationChanel();
+                        Intent resultIntent = new Intent(this, NotificationBookingActivityActivity.class);
+                        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 1, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        NotificationCompat.Builder builder = new NotificationCompat.Builder(MapClientBookingActivity.this, "ubberClone")
 
-                    NotificationManagerCompat notificationManagerCompat =NotificationManagerCompat.from(MapClientBookingActivity.this);
-                    notificationManagerCompat.notify(123, builder.build());
+                                .setSmallIcon(R.drawable.ic_launcher_background)
+                                .setContentTitle("LINEA 111")
+                                .setContentText("TU TRANSPORTE SE ENCUENTRA A 1 KILOMETRO")
+                                .setAutoCancel(true)
+                                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                                .setContentIntent(resultPendingIntent);
 
-                    mMediaPlayer = MediaPlayer.create(this, R.raw.ringtone);
-                    mMediaPlayer.setLooping(true);
-                    if (mMediaPlayer!=null){
-                        if(!mMediaPlayer.isPlaying()){
-                            mMediaPlayer.start();
+                        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(MapClientBookingActivity.this);
+                        notificationManagerCompat.notify(123, builder.build());
+
+                        mMediaPlayer = MediaPlayer.create(this, R.raw.ringtone);
+                        mMediaPlayer.setLooping(true);
+                        if (mMediaPlayer != null) {
+                            if (!mMediaPlayer.isPlaying()) {
+                                mMediaPlayer.start();
+                            }
+
                         }
-
+                        //showNotificationActivity();
+                        bandera2 = true;
                     }
-                    //showNotificationActivity();
-                    bandera2=true;
+
+                    Toast.makeText(MapClientBookingActivity.this, "Actualizando " + distance, Toast.LENGTH_SHORT).show();
+                }else{
+                   // float distance = getDistance(mDestinationLatLong.latitude, mDestinationLatLong.longitude, RouteiLatLng.latitude, RoutefLatLng.longitude);
+                    float distance = getDistance(RoutefLatLng.latitude, RoutefLatLng.longitude, mDestinationLatLong.latitude, mDestinationLatLong.longitude);
+
+                    if (distance <= 200 && !bandera2) {
+                        createNotficationChanel();
+                        Intent resultIntent = new Intent(this, NotificationBookingActivityActivity.class);
+                        PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 1, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        NotificationCompat.Builder builder = new NotificationCompat.Builder(MapClientBookingActivity.this, "ubberClone")
+
+                                .setSmallIcon(R.drawable.ic_launcher_background)
+                                .setContentTitle("LINEA 111")
+                                .setContentText("Llegaste a tu destino")
+                                .setAutoCancel(true)
+                                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                                .setContentIntent(resultPendingIntent);
+
+                        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(MapClientBookingActivity.this);
+                        notificationManagerCompat.notify(123, builder.build());
+
+                        mMediaPlayer = MediaPlayer.create(this, R.raw.ringtone);
+                        mMediaPlayer.setLooping(true);
+                        if (mMediaPlayer != null) {
+                            if (!mMediaPlayer.isPlaying()) {
+                                mMediaPlayer.start();
+                            }
+
+                        }
+                        //showNotificationActivity();
+                        bandera2 = true;
+                    }
+
+                    Toast.makeText(MapClientBookingActivity.this, "Actualizando " + distance, Toast.LENGTH_SHORT).show();
                 }
-        Toast.makeText(MapClientBookingActivity.this, "Actualizando "+distance, Toast.LENGTH_SHORT).show();
         //Toast.makeText(MapClientBookingActivity.this, "Distancia "+distance, Toast.LENGTH_SHORT).show();
     }
 

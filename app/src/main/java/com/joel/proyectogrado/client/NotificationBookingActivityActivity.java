@@ -12,14 +12,14 @@ import com.joel.proyectogrado.R;
 
 public class NotificationBookingActivityActivity extends AppCompatActivity {
     Button btnAceptar;
-    private MediaPlayer mMediaPlayer;
+    //private MediaPlayer mMediaPlayer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification_booking_activity);
         btnAceptar=findViewById(R.id.btnAceptar);
-        mMediaPlayer =MediaPlayer.create(this, R.raw.ringtone);
-        mMediaPlayer.setLooping(true);
+        //mMediaPlayer =MediaPlayer.create(this, R.raw.ringtone);
+        //mMediaPlayer.setLooping(true);
         getWindow().addFlags(
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
                         WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
@@ -37,10 +37,12 @@ public class NotificationBookingActivityActivity extends AppCompatActivity {
     private void finalizarActividad() {
        // Intent intent=new Intent(NotificationBookingActivityActivity.this,MapClientBookingActivity.class);
         //startActivity(intent);
-        onBackPressed();
+        //onBackPressed();
+        //mMediaPlayer.pause();
+        NotificationBookingActivityActivity.super.onBackPressed();
     }
 
-    @Override
+  /*  @Override
     protected void onPause() {
         super.onPause();
         if (mMediaPlayer!=null){
@@ -63,16 +65,16 @@ public class NotificationBookingActivityActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (mMediaPlayer!=null){
+        /*if (mMediaPlayer!=null){
             if(!mMediaPlayer.isPlaying()){
                 mMediaPlayer.start();
 
             }
 
         }
-    }
+    }*/
 
-    @Override
+    /*@Override
     protected void onDestroy() {
 
         super.onDestroy();
@@ -81,5 +83,5 @@ public class NotificationBookingActivityActivity extends AppCompatActivity {
                 mMediaPlayer.pause();
             }
         }
-    }
+    }*/
 }
