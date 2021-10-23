@@ -1,0 +1,30 @@
+[33m9d65dbf[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m permisos del buscador de google
+[33m9d6b134[m[33m ([m[1;32mrevision[m[33m)[m Diseñando pantallas de calificacion y historial
+[33m7b51ecb[m Implementando la alarma para el destino
+[33mb156111[m implementando buscador de google
+[33m153ac5e[m añadiendo la actividad para mostrar distancia y tiempo
+[33m967e3d2[m Añadiendo notificacion y alarma de transporte cercano
+[33m9446a87[m trazando ruta entre cliente y conductor
+[33mefce46a[m Mostrando datos del conductor al cliente
+[33m1dda264[m encontrando al conductor mas cercano
+[33m6c616df[m Mejorando la interfaz del conductor
+[33med72798[m Subiendo el web service al servidor
+[33ma1f50b0[m[33m ([m[1;33mtag: v1.0.1[m[33m)[m Trabajando en el gps del conductor
+[33m2730f50[m[33m ([m[1;33mtag: v1.0.0[m[33m, [m[1;31morigin/main[m[33m, [m[1;32mnuevasfunciones[m[33m)[m Direccionando los vehiculos
+[33mc54b56d[m Reporte de transporte lleno o vacio
+[33m5b7ea70[m Graficando ruta del la linea 111
+[33mc02e8a3[m mejorando el conectado y desconectado del conductor
+[33m6d3f179[m añadiendo diferentes conductores
+[33ma1ade94[m Conectar y desconectar gps del conductor
+[33m683abf2[m actualizando posicion conductor
+[33me0e3fcb[m base de datos SQlite
+[33mc8fe9b2[m ALMACENANDO LA POSICION DE CONDUCTOR
+[33m72f4923[m Actualizacion de datos
+[33mb3dedd6[m actualizacion y registro del cliente
+[33m053951b[m implementando fragment
+[33mf702d94[m estableciendo puntos en el mapa
+[33m07a8e9f[m Creando Sessioness
+[33me0ca999[m integrando firebase
+[33m1df13ac[m Desplegando mapa
+[33m2820e3c[m Conectando a base de datos
+[33mde25062[m Diseño de la interfaz del login
