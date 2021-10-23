@@ -15,7 +15,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProyectoGrado"
         android:usesCleartextTraffic="true">
-        <activity android:name=".EditarDriveActivity"></activity>
+        <activity
+            android:name=".calification_client"
+            android:exported="true" />
+        <activity android:name=".EditarDriveActivity" />
         <activity android:name=".UpdateClientActivity" />
         <activity
             android:name=".Activitys.LoginActivity2"
