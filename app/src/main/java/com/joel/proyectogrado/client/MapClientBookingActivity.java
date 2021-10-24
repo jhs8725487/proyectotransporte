@@ -34,6 +34,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,6 +64,7 @@ import com.joel.proyectogrado.Activitys.UpdateinfoActivity;
 import com.joel.proyectogrado.R;
 import com.joel.proyectogrado.providers.GoogleApiProvider;
 import com.joel.proyectogrado.utils.DecodePoints;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -98,10 +100,12 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
     private TextView mtextviewAvailableBooking;
     private TextView mtextviewTime;
     private TextView mtextviewDistance;
+    ImageView imageViewBooking;
     private LatLng mOriginLatLong, mDestinationLatLong;
     private Button mButtonStartTravel;
     boolean bandera=false, bandera2=false, bandera3=false;
     private TextView mtextviewAdressBooking;
+    private RequestQueue request;
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
@@ -153,6 +157,8 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
         mtextviewTime=findViewById(R.id.textviewTime);
         mtextviewDistance=findViewById(R.id.textviewDistance);
         mButtonStartTravel=findViewById(R.id.btnStartBooking);
+        imageViewBooking=findViewById(R.id.imageViewClientBooking);
+        request=Volley.newRequestQueue(getApplicationContext());
         double mLatitude =getIntent().getDoubleExtra("mLatitude",0);
         double mLongitude=getIntent().getDoubleExtra("mLongitude",0);
         double mLatitude2=getIntent().getDoubleExtra("mLatitude2",0);
@@ -164,6 +170,7 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
         //findDriver("https://agleam-money.000webhostapp.com/test/ejemploBDRemota/buscar_idconductor.php?idUsuario=" + usuario +"");
         Toast.makeText(MapClientBookingActivity.this, usuario+" ", Toast.LENGTH_SHORT).show();
         startRepeating();
+        Picasso.with(MapClientBookingActivity.this).load("https://agleam-money.000webhostapp.com/test/PROYECTOFINAL/uploads/usuarios/1.jpg").into(imageViewBooking);
         mButtonStartTravel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -453,7 +460,6 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
                             if (!mMediaPlayer.isPlaying()) {
                                 mMediaPlayer.start();
                             }
-
                         }
                         //showNotificationActivity();
                         bandera2 = true;
@@ -466,7 +472,7 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
 
                     if (distance <= 200 && !bandera2) {
                         createNotficationChanel();
-                        Intent resultIntent = new Intent(this, NotificationBookingActivityActivity.class);
+                        Intent resultIntent = new Intent(this, calification_client.class);
                         PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 1, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                         NotificationCompat.Builder builder = new NotificationCompat.Builder(MapClientBookingActivity.this, "ubberClone")
 
@@ -524,6 +530,7 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
                         mTextViewClientBooking.setText(jsonObject.getString("Nombre"));
                         mTextViewEmailClientBooking.setText(jsonObject.getString("Correo"));
                         mtextviewPhoneClientBooking.setText(jsonObject.getString("Telefono"));
+                        //Picasso.with(MapClientBookingActivity.this).load("https://agleam-money.000webhostapp.com/test/PROYECTOFINAL/uploads/usuarios/1.jpg").into(imageViewBooking);
                     } catch (JSONException e) {
                         Toast.makeText(MapClientBookingActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }

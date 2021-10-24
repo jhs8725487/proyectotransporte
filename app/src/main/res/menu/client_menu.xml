@@ -15,6 +15,9 @@
     <item android:id="@+id/conductores_cercanos"
         android:title="Ver conductores cercanos"
         app:showAsAction="never" />
+    <item android:id="@+id/historial"
+        android:title="Ver historial"
+        app:showAsAction="never" />
     <item android:id="@+id/action_logout"
         android:title="Cerrar sesion"
         app:showAsAction="never" />

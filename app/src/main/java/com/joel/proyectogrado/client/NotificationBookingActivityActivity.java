@@ -12,6 +12,7 @@ import com.joel.proyectogrado.R;
 
 public class NotificationBookingActivityActivity extends AppCompatActivity {
     Button btnAceptar;
+    private MediaPlayer mMediaPlayer;
     //private MediaPlayer mMediaPlayer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +27,11 @@ public class NotificationBookingActivityActivity extends AppCompatActivity {
                         WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
                         WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
         );
+        if(mMediaPlayer!=null){
+            if(mMediaPlayer.isPlaying()){
+                mMediaPlayer.pause();
+            }
+        }
         btnAceptar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
