@@ -17,6 +17,10 @@
         android:theme="@style/Theme.ProyectoGrado"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".client.HistoryBookingClientActivity"
+            android:parentActivityName=".client.MapClientActivity"
+            android:exported="true" />
+        <activity
             android:name=".client.calification_client"
             android:exported="true" />
         <activity

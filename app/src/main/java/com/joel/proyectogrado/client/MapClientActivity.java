@@ -600,6 +600,9 @@ private float getDistance(double deviceLatitude, double deviceLongitude, double 
         }else if(item.getItemId()==R.id.conductores_cercanos){
             this.bandera2=true;
             startRepeating();
+        }else if(item.getItemId()==R.id.action_history){
+            Intent intent=new Intent(MapClientActivity.this,HistoryBookingClientActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

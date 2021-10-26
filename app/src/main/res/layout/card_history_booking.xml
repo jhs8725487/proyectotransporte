@@ -12,6 +12,7 @@
         android:orientation="horizontal">
 
         <ImageView
+            android:id="@+id/imageViewHistoryBooking"
             android:layout_width="150dp"
             android:layout_height="250dp"
             android:src="@drawable/icon_user"
@@ -22,7 +23,6 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textViewNombre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Nombre"
@@ -32,6 +32,7 @@
                 android:layout_marginLeft="15dp"/>
 
             <TextView
+                android:id="@+id/textViewNombre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Carlos andres"
@@ -40,7 +41,6 @@
                 android:layout_marginLeft="15dp"/>
 
             <TextView
-                android:id="@+id/textViewOrigen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Origen"
@@ -50,6 +50,7 @@
                 android:layout_marginLeft="15dp"/>
 
             <TextView
+                android:id="@+id/textViewOrigen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Avenida falsa con calle falsa"
@@ -59,7 +60,6 @@
                 android:layout_marginLeft="15dp"/>
 
             <TextView
-                android:id="@+id/textViewDestino"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Destino"
@@ -69,6 +69,7 @@
                 android:layout_marginLeft="15dp"/>
 
             <TextView
+                android:id="@+id/textViewDestino"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Avenida falsa con calle falsa"
@@ -79,14 +80,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Calificacion"
+                android:text="Telefono"
                 android:textColor="@color/colorBlueLight"
                 android:textSize="15sp"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="15dp"/>
 
             <TextView
-                android:id="@+id/textViewCalification"
+                android:id="@+id/textViewTelefono"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"

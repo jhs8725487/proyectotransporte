@@ -530,7 +530,7 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
                         mTextViewClientBooking.setText(jsonObject.getString("Nombre"));
                         mTextViewEmailClientBooking.setText(jsonObject.getString("Correo"));
                         mtextviewPhoneClientBooking.setText(jsonObject.getString("Telefono"));
-                        //Picasso.with(MapClientBookingActivity.this).load("https://agleam-money.000webhostapp.com/test/PROYECTOFINAL/uploads/usuarios/1.jpg").into(imageViewBooking);
+                        Picasso.with(MapClientBookingActivity.this).load("https://agleam-money.000webhostapp.com/test/PROYECTOFINAL/uploads/usuarios/1.jpg").into(imageViewBooking);
                     } catch (JSONException e) {
                         Toast.makeText(MapClientBookingActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
