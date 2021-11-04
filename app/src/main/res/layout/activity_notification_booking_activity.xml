@@ -31,15 +31,31 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="SU TRANSPORTE SE ENCUENTRA A 1 KILOMETRO"
+                    android:text="SU TRANSPORTE YA ESTA CERCA A USTED"
                     android:gravity="center"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="@color/black"/>
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="70dp"
+                    android:text="Lugar de recojida"
+                    android:gravity="center"
+                    android:textSize="18sp"
+                    android:textColor="@color/black"/>
+                <TextView
+                    android:id="@+id/textViewRecojida"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:text="0 Km"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
                     android:text="Tiempo de llegada"
                     android:gravity="center"
                     android:textSize="18sp"

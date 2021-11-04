@@ -57,6 +57,8 @@ public class RequestDriverActivity extends AppCompatActivity {
     public static final String nombres="names";
     private List<Marker> mDriversMarkers=new ArrayList<>();
     RequestQueue requestQueue;
+    private String mExtraOrigin;
+    private String mExtraDestination;
     SharedPreferences mPref;
     public double Latitud=-17.4135865, Longitud=-66.156731219;
     @Override
@@ -67,6 +69,8 @@ public class RequestDriverActivity extends AppCompatActivity {
         mTextviewLookingFor=findViewById(R.id.textViewLookingFor);
         mButtonCancelRequest=findViewById(R.id.btnCancelRequest);
         mAnimation.playAnimation();
+        mExtraOrigin=getIntent().getStringExtra("Origin");
+        mExtraDestination=getIntent().getStringExtra("Destination");
         buscarConductores("https://agleam-money.000webhostapp.com/test/ejemploBDRemota/buscar_conductor.php");
 
     }
@@ -142,6 +146,8 @@ public class RequestDriverActivity extends AppCompatActivity {
                 intent.putExtra("mLongitude",mLongitude);
                 intent.putExtra("mLatitude2",mLatitude2);
                 intent.putExtra("mLongitude2",mLongitude2);
+                intent.putExtra("Origin",mExtraOrigin);
+                intent.putExtra("Destination",mExtraDestination);
                 startActivity(intent);
                 finish();
             }

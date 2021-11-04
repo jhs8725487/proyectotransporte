@@ -101,8 +101,13 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
     private TextView mtextviewTime;
     private TextView mtextviewDistance;
     ImageView imageViewBooking;
+    private String mExtraOrigin;
+    private String mExtraDestination;
+    String Duration;
+    String Time;
     private LatLng mOriginLatLong, mDestinationLatLong;
     private Button mButtonStartTravel;
+    SharedPreferences mPref;
     boolean bandera=false, bandera2=false, bandera3=false;
     private TextView mtextviewAdressBooking;
     private RequestQueue request;
@@ -159,10 +164,13 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
         mButtonStartTravel=findViewById(R.id.btnStartBooking);
         imageViewBooking=findViewById(R.id.imageViewClientBooking);
         request=Volley.newRequestQueue(getApplicationContext());
+        mPref=getApplicationContext().getSharedPreferences("typUser",MODE_PRIVATE);
         double mLatitude =getIntent().getDoubleExtra("mLatitude",0);
         double mLongitude=getIntent().getDoubleExtra("mLongitude",0);
         double mLatitude2=getIntent().getDoubleExtra("mLatitude2",0);
         double mLongitude2=getIntent().getDoubleExtra("mLongitude2",0);
+        mExtraOrigin=getIntent().getStringExtra("Origin");
+        mExtraDestination=getIntent().getStringExtra("Destination");
         mOriginLatLong=new LatLng(mLatitude,mLongitude);
         mDestinationLatLong=new LatLng(mLatitude2,mLongitude2);
         mGoogleApiProvider = new GoogleApiProvider(MapClientBookingActivity.this);
@@ -345,6 +353,10 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
+    private void timeandduration (String duration, String time){
+        this.Duration=duration;
+        this.Time=time;
+    }
     private void drawRoute(LatLng Origen, LatLng Destino){
             mGoogleApiProvider.getDirections(Origen, Destino).enqueue(new Callback<String>() {
                 @Override
@@ -371,6 +383,7 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
                         String duracionText=duration.getString("text");
                         mtextviewTime.setText(duracionText);
                         mtextviewDistance.setText(distanceText);
+                        timeandduration(distanceText,duracionText);
                     } catch (Exception e) {
                         Log.d("error", "error encontrado" + e.getMessage());
                     }
@@ -436,10 +449,16 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
                 }
                 if (!bandera3) {
                     float distance = getDistance(mOriginLatLong.latitude, mOriginLatLong.longitude, RouteiLatLng.latitude, RoutefLatLng.longitude);
-
+                    /*String time = mtextviewTime.getText().toString();
+                    String distance2 = mtextviewDistance.getText().toString();
+                    Toast.makeText(MapClientBookingActivity.this, time+" "+distance2, Toast.LENGTH_SHORT).show();*/
                     if (distance <= 1000 && !bandera2) {
                         createNotficationChanel();
                         Intent resultIntent = new Intent(this, NotificationBookingActivityActivity.class);
+                            resultIntent.putExtra("Origin", mExtraOrigin);
+                           // resultIntent.putExtra("Destination", mExtraDestination);
+                            resultIntent.putExtra("Time", Duration);
+                            resultIntent.putExtra("Distance", Time);
                         PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 1, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                         NotificationCompat.Builder builder = new NotificationCompat.Builder(MapClientBookingActivity.this, "ubberClone")
 
@@ -473,6 +492,8 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
                     if (distance <= 200 && !bandera2) {
                         createNotficationChanel();
                         Intent resultIntent = new Intent(this, calification_client.class);
+                        resultIntent.putExtra("Origin", mExtraOrigin);
+                        resultIntent.putExtra("Destination", mExtraDestination);
                         PendingIntent resultPendingIntent = PendingIntent.getActivity(this, 1, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                         NotificationCompat.Builder builder = new NotificationCompat.Builder(MapClientBookingActivity.this, "ubberClone")
 

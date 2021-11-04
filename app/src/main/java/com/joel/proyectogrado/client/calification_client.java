@@ -19,6 +19,8 @@ public class calification_client extends AppCompatActivity {
     private RatingBar mRatingBar;
     private Button mButtonCalification;
     private float mCalification=0;
+    private String mExtraOrigin;
+    private String mExtraDestination;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +29,11 @@ public class calification_client extends AppCompatActivity {
         mTextViewOrigin=findViewById(R.id.originCalification);
         mTextViewDestination=findViewById(R.id.destinationCalification);
         mRatingBar =findViewById(R.id.ratingbarCalification);
+        mExtraOrigin=getIntent().getStringExtra("Origin");
+        mExtraDestination=getIntent().getStringExtra("Destination");
         mButtonCalification=findViewById(R.id.btnCalificationDriver);
+        mTextViewOrigin.setText(mExtraOrigin);
+        mTextViewDestination.setText(mExtraDestination);
         mRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float calification, boolean b) {

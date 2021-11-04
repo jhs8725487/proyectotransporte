@@ -219,6 +219,8 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
                         intent.putExtra("mOriginLong", mOriginLatLng2.longitude);
                         intent.putExtra("mDestinationLat",mDestinationLatLng.latitude);
                         intent.putExtra("mDestinationLong",mDestinationLatLng.longitude);
+                        intent.putExtra("Origin",mOrigin);
+                        intent.putExtra("Destination",mDestination);
                         startActivity(intent);
                         finish();
                     }else{
@@ -232,6 +234,8 @@ public class MapClientActivity extends AppCompatActivity implements OnMapReadyCa
                         intent.putExtra("mOriginLong", mOriginLatLng2.longitude);
                         intent.putExtra("mDestinationLat",mDestinationLatLng.latitude);
                         intent.putExtra("mDestinationLong",mDestinationLatLng.longitude);
+                        intent.putExtra("Origin",mOrigin);
+                        intent.putExtra("Destination",mDestination);
                         startActivity(intent);
                         finish();
                     }else{
