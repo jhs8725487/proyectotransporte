@@ -184,6 +184,12 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
             public void onClick(View view) {
                 mMap.addMarker(new MarkerOptions().position(mDestinationLatLong).title("Lugar de destino").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_pin_blue)));
                 bandera3=true;
+                if (mMediaPlayer != null) {
+                    if (mMediaPlayer.isPlaying()) {
+                        mMediaPlayer.stop();
+                    }
+                }
+                mButtonStartTravel.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -193,13 +199,20 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
     @Override
     protected void onStop() {
         super.onStop();
-
-        String usuario=getIntent().getStringExtra("usuario");
-
-        buscarUsuario("https://agleam-money.000webhostapp.com/test/ejemploBDRemota/buscar_usuario.php?idUsuario=" + usuario + "");
-
-        //  stopRepeating();
+        if (mMediaPlayer != null) {
+            if (mMediaPlayer.isPlaying()) {
+                mMediaPlayer.stop();
+            }
+        }
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+
+
     @Override
     protected void onDestroy() {
 
@@ -453,6 +466,13 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
                     String distance2 = mtextviewDistance.getText().toString();
                     Toast.makeText(MapClientBookingActivity.this, time+" "+distance2, Toast.LENGTH_SHORT).show();*/
                     if (distance <= 1000 && !bandera2) {
+                        mMediaPlayer = MediaPlayer.create(this, R.raw.ringtone);
+                        mMediaPlayer.setLooping(true);
+                        if (mMediaPlayer != null) {
+                            if (!mMediaPlayer.isPlaying()) {
+                                mMediaPlayer.start();
+                            }
+                        }
                         createNotficationChanel();
                         Intent resultIntent = new Intent(this, NotificationBookingActivityActivity.class);
                             resultIntent.putExtra("Origin", mExtraOrigin);
@@ -473,13 +493,7 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
                         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(MapClientBookingActivity.this);
                         notificationManagerCompat.notify(123, builder.build());
 
-                        mMediaPlayer = MediaPlayer.create(this, R.raw.ringtone);
-                        mMediaPlayer.setLooping(true);
-                        if (mMediaPlayer != null) {
-                            if (!mMediaPlayer.isPlaying()) {
-                                mMediaPlayer.start();
-                            }
-                        }
+
                         //showNotificationActivity();
                         bandera2 = true;
                     }
@@ -489,7 +503,7 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
                    // float distance = getDistance(mDestinationLatLong.latitude, mDestinationLatLong.longitude, RouteiLatLng.latitude, RoutefLatLng.longitude);
                     float distance = getDistance(RoutefLatLng.latitude, RoutefLatLng.longitude, mDestinationLatLong.latitude, mDestinationLatLong.longitude);
 
-                    if (distance <= 200 && !bandera2) {
+                    if (distance <= 300 && bandera2) {
                         createNotficationChanel();
                         Intent resultIntent = new Intent(this, calification_client.class);
                         resultIntent.putExtra("Origin", mExtraOrigin);
@@ -507,17 +521,18 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
 
                         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(MapClientBookingActivity.this);
                         notificationManagerCompat.notify(123, builder.build());
-
-                        mMediaPlayer = MediaPlayer.create(this, R.raw.ringtone);
+                        CommonMethod mediaplayer=new CommonMethod();
+                        mediaplayer.SoundPlayer(this);
+                       // mediaplayer.player.start();
+                        /*mMediaPlayer = MediaPlayer.create(this, R.raw.ringtone);
                         mMediaPlayer.setLooping(true);
                         if (mMediaPlayer != null) {
                             if (!mMediaPlayer.isPlaying()) {
                                 mMediaPlayer.start();
                             }
-
-                        }
+                        }*/
                         //showNotificationActivity();
-                        bandera2 = true;
+                        bandera2 = false;
                     }
 
                     Toast.makeText(MapClientBookingActivity.this, "Actualizando " + distance, Toast.LENGTH_SHORT).show();

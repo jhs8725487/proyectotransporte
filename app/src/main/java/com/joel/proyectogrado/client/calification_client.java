@@ -53,6 +53,9 @@ public class calification_client extends AppCompatActivity {
         if(mCalification>0){
             Toast.makeText(calification_client.this, "La calificacion se realizo con exito", Toast.LENGTH_SHORT).show();
             Intent intent=new Intent(calification_client.this,MapClientActivity.class);
+            CommonMethod mediaplayer=new CommonMethod();
+            mediaplayer.SoundPlayer(this);
+            mediaplayer.player.stop();
             startActivity(intent);
             finish();
         }else{

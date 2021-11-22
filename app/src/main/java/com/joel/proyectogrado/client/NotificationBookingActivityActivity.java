@@ -36,6 +36,8 @@ public class NotificationBookingActivityActivity extends AppCompatActivity {
         //mMediaPlayer =MediaPlayer.create(this, R.raw.ringtone);
         //mMediaPlayer.setLooping(true);
         mExtraOrigin=getIntent().getStringExtra("Origin");
+        mMediaPlayer = MediaPlayer.create(this, R.raw.ringtone);
+        mMediaPlayer.setLooping(true);
        // mExtraDestination=getIntent().getStringExtra("Destination");
         //mExtraTime=getIntent().getStringExtra("Time");
         //mExtraDistance=getIntent().getStringExtra("Distance");
@@ -54,7 +56,7 @@ public class NotificationBookingActivityActivity extends AppCompatActivity {
         );
         if(mMediaPlayer!=null){
             if(mMediaPlayer.isPlaying()){
-                mMediaPlayer.pause();
+                mMediaPlayer.stop();
             }
         }
         btnAceptar.setOnClickListener(new View.OnClickListener() {
